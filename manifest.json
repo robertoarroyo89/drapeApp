@@ -1,0 +1,24 @@
+{
+  "name": "Drape — Tu armario, simplificado",
+  "short_name": "Drape",
+  "description": "Planifica tu outfit diario con estilo",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#F5F3EE",
+  "theme_color": "#F5F3EE",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
