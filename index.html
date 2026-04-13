@@ -493,38 +493,111 @@ const PP=()=>S.w['pants_'+ctx]||[];
 const SS=()=>S.w['shoes_'+ctx]||[];
 const BL=()=>S.w.blazers||[];
 
-function sugP(top){
-  const p=PP(),c=top.color,hi=W().hi;
-  if(ctx==='casual') return hi>=20?p.filter(x=>x.type==='corto').map(x=>x.id):p.map(x=>x.id);
-  let r=[];
-  if(c==='camel')r=['p3','p4','p1','p5'];
-  else if(c.includes('blanco'))r=['p3','p5','p4','p1'];
-  else if(c.includes('verde'))r=['p1','p4','p3','p5'];
-  else if(c.includes('gris'))r=['p4','p1','p5','p3'];
-  else if(c.includes('azul'))r=['p3','p1','p4','p5'];
-  else if(c==='coral')r=['p3','p4','p1'];
-  else if(c.includes('marrón')||c==='navy')r=['p3','p4','p1','p5'];
-  else r=p.map(x=>x.id);
-  return r.filter(id=>p.find(x=>x.id===id));
+// === COLOR-BASED MATCHING (works with any garment, new or original) ===
+
+// Maps a color string to a normalized group for matching
+function colorGroup(c){
+  if(!c)return 'otros';
+  c=c.toLowerCase();
+  if(c.includes('blanc'))return 'blanco';
+  if(c.includes('negro'))return 'negro';
+  if(c.includes('gris'))return 'gris';
+  if(c==='navy'||c.includes('azul marino'))return 'navy';
+  if(c.includes('azul denim'))return 'denim';
+  if(c.includes('azul oscuro'))return 'azul oscuro';
+  if(c.includes('azul'))return 'azul';
+  if(c.includes('verde oscuro'))return 'verde oscuro';
+  if(c.includes('verde'))return 'verde';
+  if(c==='camel')return 'camel';
+  if(c.includes('marrón claro'))return 'marrón claro';
+  if(c.includes('marrón'))return 'marrón';
+  if(c.includes('coral')||c.includes('rosa')||c.includes('rojo'))return 'cálido';
+  if(c.includes('beige')||c.includes('crema'))return 'neutro claro';
+  return 'otros';
 }
+
+// Pant color priority by top color group (ordered best→good)
+const PANT_RULES={
+  'blanco':   ['gris','denim','negro','marrón claro','camel'],
+  'negro':    ['gris','denim','negro','marrón claro'],
+  'gris':     ['negro','marrón claro','denim','gris','camel'],
+  'navy':     ['gris','negro','marrón claro','denim','camel'],
+  'azul':     ['gris','marrón claro','negro','denim','camel'],
+  'azul oscuro':['gris','marrón claro','negro','camel'],
+  'verde':    ['marrón claro','negro','gris','denim'],
+  'verde oscuro':['marrón claro','negro','gris','denim','camel'],
+  'camel':    ['gris','negro','marrón claro','denim'],
+  'marrón claro':['gris','negro','denim','navy'],
+  'marrón':   ['gris','negro','denim','camel'],
+  'cálido':   ['gris','negro','marrón claro','denim'],
+  'neutro claro':['gris','negro','denim','marrón claro'],
+  'denim':    ['negro','gris','camel','marrón claro'],
+  'otros':    ['gris','negro','denim','marrón claro','camel']
+};
+
+// Shoe color priority by pant color group
+const SHOE_RULES={
+  'negro':    ['azul oscuro','negro','marrón'],
+  'gris':     ['marrón','azul oscuro','camel'],
+  'camel':    ['marrón','camel','azul oscuro'],
+  'marrón claro':['marrón','camel','azul oscuro'],
+  'marrón':   ['marrón','camel','azul oscuro'],
+  'denim':    ['camel','marrón','azul oscuro'],
+  'blanco':   ['camel','marrón','azul oscuro'],
+  'otros':    ['marrón','azul oscuro','camel']
+};
+
+// Blazer-top clash: same color family = bad combo
+const BLAZER_CLASH={
+  'navy':['navy','azul oscuro','azul marino'],
+  'camel':['camel','marrón claro','marrón'],
+  'negro':['negro'],
+  'gris':['gris']
+};
+
+function sugP(top){
+  const p=PP(),tc=colorGroup(top.color),hi=W().hi;
+  if(ctx==='casual') return hi>=20?p.filter(x=>x.type==='corto').map(x=>x.id):p.map(x=>x.id);
+  const priority=PANT_RULES[tc]||PANT_RULES['otros'];
+  // Score each pant: lower index in priority = better match
+  const scored=p.map(pant=>{
+    const pg=colorGroup(pant.color);
+    const idx=priority.indexOf(pg);
+    return{id:pant.id,score:idx>=0?idx:99};
+  });
+  scored.sort((a,b)=>a.score-b.score);
+  // Return IDs of pants that match (score < 99), or all if nothing matches
+  const matched=scored.filter(x=>x.score<99).map(x=>x.id);
+  return matched.length?matched:p.map(x=>x.id);
+}
+
 function sugS(pant){
   const s=SS();
-  if(ctx==='casual') return ['cs1'].filter(id=>s.find(x=>x.id===id));
-  const pc=pant.color;
-  let r=[];
-  if(pc==='negro')r=['s2','s3'];
-  else if(pc==='gris')r=['s3','s2'];
-  else if(pc==='camel'||pc==='marrón claro')r=['s3','s1'];
-  else if(pc==='azul denim')r=['s1','s3'];
-  else r=['s3','s2'];
-  return r.filter(id=>s.find(x=>x.id===id));
+  if(ctx==='casual'){
+    // In casual, prefer zapatillas
+    const zaps=s.filter(x=>x.type==='zapatilla').map(x=>x.id);
+    return zaps.length?zaps:s.map(x=>x.id);
+  }
+  const pc=colorGroup(pant.color);
+  const priority=SHOE_RULES[pc]||SHOE_RULES['otros'];
+  const scored=s.map(shoe=>{
+    const sg=colorGroup(shoe.color);
+    const idx=priority.indexOf(sg);
+    return{id:shoe.id,score:idx>=0?idx:99};
+  });
+  scored.sort((a,b)=>a.score-b.score);
+  const matched=scored.filter(x=>x.score<99).map(x=>x.id);
+  return matched.length?matched:s.map(x=>x.id);
 }
+
 function blazerOk(b,t){
   if(!b||!t)return true;
-  const bc=b.color,tc=t.color;
-  if(bc==='navy') return !['azul oscuro','azul marino','navy'].includes(tc);
-  if(bc==='camel') return !['camel','marrón claro','marrón'].includes(tc);
-  return true;
+  const bg=colorGroup(b.color);
+  const tg=colorGroup(t.color);
+  const clashes=BLAZER_CLASH[bg];
+  if(clashes)return !clashes.includes(tg);
+  // Generic: same group = clash
+  return bg!==tg;
 }
 function fragFor(){
   if(ctx==='casual')return pick(FRAGS.casual);
