@@ -147,10 +147,7 @@ body{
 .outfit-dot{width:8px;height:8px;border-radius:50%;background:var(--green);flex-shrink:0}
 
 /* === FRAGRANCE === */
-.frag-row{display:flex;align-items:center;gap:12px;margin:10px 20px 0;padding:13px 16px;background:var(--card);border-radius:var(--radius);border:1px solid var(--border);box-shadow:var(--shadow-sm)}
-.frag-icon{width:34px;height:34px;border-radius:9px;background:var(--ink);display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.frag-label{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)}
-.frag-name{font-size:13px;font-weight:600;color:var(--ink);margin-top:1px}
+/* Fragrance section uses chip-row like the rest */
 
 /* === TIPS === */
 .tip-row{margin:8px 20px 0;padding:12px 14px;font-size:12px;font-weight:500;border-left:3px solid;border-radius:0 6px 6px 0}
@@ -293,6 +290,10 @@ body{
       <button class="ctx-btn active" id="ctx-of" onclick="setCtx('oficina')">Oficina</button>
       <button class="ctx-btn" id="ctx-ca" onclick="setCtx('casual')">Casual</button>
     </div>
+    <div class="ctx-row" style="padding-top:8px">
+      <button class="ctx-btn active" id="ctx-day" onclick="setMomento('dia')">☀ Día</button>
+      <button class="ctx-btn" id="ctx-night" onclick="setMomento('noche')">🌙 Noche</button>
+    </div>
 
     <div id="blazer-wrap">
       <div class="section-label">Chaqueta (opcional)</div>
@@ -307,6 +308,9 @@ body{
 
     <div class="section-label">Calzado</div>
     <div class="chip-row" id="shoes-grid"></div>
+
+    <div class="section-label" id="frag-section-label">Fragancia</div>
+    <div class="chip-row" id="frag-grid"></div>
 
     <div id="outfit-wrap"></div>
     <button class="cta-btn" id="save-cta" onclick="saveH()" style="display:none">
@@ -345,8 +349,8 @@ body{
 <!-- MODAL (full-screen overlay) -->
 <div class="modal-overlay" id="modal-wrap">
   <div class="modal">
-    <div class="modal-title">Añadir prenda</div>
-    <select id="m-cat">
+    <div class="modal-title" id="m-title">Añadir prenda</div>
+    <select id="m-cat" onchange="updateModal()">
       <option value="blazers">Chaquetas</option>
       <option value="tops_oficina">Tops — oficina</option>
       <option value="tops_casual">Tops — casual</option>
@@ -354,9 +358,21 @@ body{
       <option value="pants_casual">Pantalones — casual</option>
       <option value="shoes_oficina">Calzado — oficina</option>
       <option value="shoes_casual">Calzado — casual</option>
+      <option value="fragancias">Fragancias</option>
     </select>
     <input type="text" id="m-label" placeholder="Nombre (ej: Camisa azul Massimo Dutti)"/>
-    <input type="text" id="m-color" placeholder="Color principal (ej: azul)"/>
+    <div id="m-color-wrap">
+      <input type="text" id="m-color" placeholder="Color principal (ej: azul)"/>
+    </div>
+    <div id="m-frag-type" style="display:none">
+      <div style="font-size:12px;font-weight:600;color:var(--ink3);margin-bottom:8px">Tipo de fragancia (puedes elegir varios):</div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px">
+        <label style="display:flex;align-items:center;gap:4px;font-size:13px;color:var(--ink2);cursor:pointer"><input type="checkbox" value="formal" class="frag-type-chk"> Formal</label>
+        <label style="display:flex;align-items:center;gap:4px;font-size:13px;color:var(--ink2);cursor:pointer"><input type="checkbox" value="smart" class="frag-type-chk"> Smart</label>
+        <label style="display:flex;align-items:center;gap:4px;font-size:13px;color:var(--ink2);cursor:pointer"><input type="checkbox" value="casual" class="frag-type-chk"> Casual</label>
+        <label style="display:flex;align-items:center;gap:4px;font-size:13px;color:var(--ink2);cursor:pointer"><input type="checkbox" value="fresh" class="frag-type-chk"> Fresco</label>
+      </div>
+    </div>
     <div class="modal-row">
       <button class="modal-cancel" onclick="closeM()">Cancelar</button>
       <button class="modal-ok" onclick="saveItem()">Añadir</button>
@@ -381,14 +397,14 @@ async function fetchWeather(){
   // Valencia coords
   const lat=39.47,lon=-0.376;
   try{
-    const url=`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=temperature_2m_max,precipitation_probability_max,weathercode&timezone=Europe/Madrid&forecast_days=5`;
+    const url=`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=temperature_2m_max,precipitation_probability_max,weather_code&timezone=Europe/Madrid&forecast_days=5`;
     const res=await fetch(url);
     if(!res.ok) throw new Error('API error');
     const data=await res.json();
     const daily=data.daily;
     WEATHER=daily.time.map((t,i)=>{
       const d=new Date(t+'T12:00:00');
-      const code=daily.weathercode[i];
+      const code=daily.weather_code[i];
       let icon='☀',cond='soleado';
       if(code<=1){icon='☀';cond='despejado'}
       else if(code<=3){icon='⛅';cond='nublado parcial'}
@@ -404,13 +420,13 @@ async function fetchWeather(){
         rain:daily.precipitation_probability_max[i]||0
       };
     });
-    // Cache
-    try{localStorage.setItem('drape_weather',JSON.stringify({ts:Date.now(),data:WEATHER}))}catch(e){}
+    // Cache with version key to invalidate old format
+    try{localStorage.setItem('drape_weather',JSON.stringify({ts:Date.now(),v:2,data:WEATHER}))}catch(e){}
   }catch(e){
     // Try cache
     try{
       const cached=JSON.parse(localStorage.getItem('drape_weather')||'null');
-      if(cached&&Date.now()-cached.ts<6*3600000){WEATHER=cached.data;return}
+      if(cached&&cached.v===2&&Date.now()-cached.ts<6*3600000){WEATHER=cached.data;return}
     }catch(e2){}
     WEATHER=buildFallbackWeather();
   }
@@ -476,18 +492,52 @@ const DEF={
     {id:"cs2",label:"Loafers marrones",color:"marrón",type:"zapato"}
   ]
 };
-const FRAGS={
-  formal:["Aqua di Gio Parfum","Le Sel D'issey","Club de Nuit Man Intense"],
-  smart:["Neroli Riviera","Pure XS","Vibrant Leather Explosion (Zara)","Blue Temptation (Zara)"],
-  casual:["Lattafa Asad Bourbon","Beach Party (Armaf)","Vibrant Leather Summer Breeze (Zara)"],
-  fresh:["Neroli Riviera","Atlantis Extrait (French Avenue)","Energetically NY Elixir (Zara)"]
-};
+// Tipos: oficina, casual, calor-dia, calor-noche, frio-dia, frio-noche
+// Una fragancia puede tener varios tipos
+const DEF_FRAGS=[
+  // OFICINA
+  {id:"f1", label:"Aqua di Gio Parfum",                    type:["oficina","calor-noche"]},
+  {id:"f2", label:"Jean Lowe Immortel",                    type:["oficina","calor-dia"]},
+  {id:"f3", label:"Energetically New York Elixir (Zara)",  type:["oficina","frio-dia"]},
+  {id:"f4", label:"Club de Nuit Man Intense",              type:["oficina","calor-dia"]},
+  {id:"f5", label:"Club de Nuit Urban Man Elixir",         type:["oficina","calor-noche"]},
+  {id:"f6", label:"Sunrise of the Red Sand Dunes (Zara)",  type:["oficina","calor-dia"]},
+  {id:"f7", label:"Le Sel D'issey",                        type:["oficina","calor-dia"]},
+  // CASUAL
+  {id:"f8", label:"Sceptre Malachite",                     type:["casual","calor-dia"]},
+  {id:"f9", label:"Liquid Brun",                           type:["casual","frio-noche"]},
+  {id:"f10",label:"Neroli Riviera",                        type:["casual","calor-dia"]},
+  {id:"f11",label:"Lattafa Khamrah",                       type:["casual","frio-noche"]},
+  {id:"f12",label:"Lattafa Asad",                          type:["casual","frio-dia","frio-noche"]},
+  {id:"f13",label:"Lattafa Asad Bourbon",                  type:["casual","frio-noche"]},
+  {id:"f14",label:"Pure XS",                               type:["casual","frio-noche"]},
+  {id:"f15",label:"Jean Paul Gaultier Le Male Elixir",     type:["casual","frio-noche"]},
+  {id:"f16",label:"Shamanilla (Zara)",                     type:["casual","calor-dia"]},
+  {id:"f17",label:"Vibrant Leather Explosion (Zara)",      type:["casual","frio-dia"]},
+  {id:"f18",label:"For Him Black Edition Intense (Zara)",  type:["casual","frio-noche"]},
+  {id:"f19",label:"Vibrant Leather Summer Breeze (Zara)",  type:["casual","calor-dia"]},
+  {id:"f20",label:"Beach Party (Armaf)",                   type:["casual","calor-dia"]},
+  {id:"f21",label:"Blue Temptation (Zara)",                type:["casual","calor-dia"]},
+  {id:"f22",label:"Atlantis Extrait",                      type:["casual","calor-noche"]},
+];
 const pick=a=>a[Math.floor(Math.random()*a.length)];
 
-function loadS(){try{const s=JSON.parse(localStorage.getItem('drape_v2')||'null');if(s)return s}catch(e){}return{w:JSON.parse(JSON.stringify(DEF)),h:[]}}
+function loadS(){
+  try{
+    const s=JSON.parse(localStorage.getItem('drape_v2')||'null');
+    if(s){
+      // Migrate: add fragancias if missing
+      if(!s.w.fragancias)s.w.fragancias=JSON.parse(JSON.stringify(DEF_FRAGS));
+      return s;
+    }
+  }catch(e){}
+  const def=JSON.parse(JSON.stringify(DEF));
+  def.fragancias=JSON.parse(JSON.stringify(DEF_FRAGS));
+  return{w:def,h:[]};
+}
 function saveS(){try{localStorage.setItem('drape_v2',JSON.stringify(S))}catch(e){}}
 let S=loadS();
-let day=0,ctx='oficina',BLZ=null,TOP=null,PNT=null,SHO=null,delMode=false,curTab='look',showAllTops=false;
+let day=0,ctx='oficina',momento='dia',BLZ=null,TOP=null,PNT=null,SHO=null,FRAG=null,delMode=false,curTab='look',showAllTops=false;
 
 const W=()=>WEATHER[day];
 const TT=()=>S.w['tops_'+ctx]||[];
@@ -602,10 +652,90 @@ function blazerOk(b,t){
   // Generic: same group = clash
   return bg!==tg;
 }
-function fragFor(){
-  if(ctx==='casual')return pick(FRAGS.casual);
-  if(W().hi>20)return pick(FRAGS.fresh);
-  return pick(FRAGS.smart);
+const FF=()=>S.w.fragancias||[];
+
+// Clasifica el tono del top: claro, neutro u oscuro/intenso
+function topTone(top){
+  if(!top) return 'neutro';
+  const g=colorGroup(top.color);
+  if(['blanco','neutro claro'].includes(g)) return 'claro';
+  if(['negro','verde oscuro','azul oscuro','navy','marrón'].includes(g)) return 'oscuro';
+  return 'neutro'; // gris, azul, verde, coral, camel, denim...
+}
+
+// Puntuación de una fragancia según todos los factores activos
+function fragScore(frag){
+  if(!frag||!frag.type) return 0;
+  const hi=W()&&W().hi!=='--'?W().hi:20;
+  const calor=hi>=18;
+  const climaMomento=calor?(momento==='noche'?'calor-noche':'calor-dia'):(momento==='noche'?'frio-noche':'frio-dia');
+  const ctxTag=ctx==='oficina'?'oficina':'casual';
+  const tone=topTone(TOP);
+  let score=0;
+  // Contexto: peso alto
+  if(frag.type.includes(ctxTag)) score+=4;
+  // Clima+momento: peso alto
+  if(frag.type.includes(climaMomento)) score+=4;
+  // Tono del top: peso medio
+  if(tone==='claro'){
+    // Tops claros → mejor con fragancias frescas y limpias (calor-dia, oficina)
+    if(frag.type.some(t=>['calor-dia','oficina'].includes(t))) score+=2;
+    // Penalizar fragancias muy densas en tops claros
+    if(frag.type.some(t=>['frio-noche'].includes(t))&&!frag.type.includes('casual')) score-=1;
+  } else if(tone==='oscuro'){
+    // Tops oscuros → aguantan más densidad y especias
+    if(frag.type.some(t=>['frio-noche','frio-dia'].includes(t))) score+=2;
+    if(frag.type.includes('casual')) score+=1;
+  } else {
+    // Neutros → pequeño bonus a las que encajan en más contextos
+    score+=frag.type.length*0.3;
+  }
+  return score;
+}
+
+function sugF(){
+  const all=FF();
+  if(!all.length) return [];
+  // Puntuar y ordenar
+  const scored=all.map(f=>({id:f.id,score:fragScore(f)})).sort((a,b)=>b.score-a.score);
+  const maxScore=scored[0].score;
+  // Sugeridas: las que tienen puntuación alta (al menos 70% del máximo y mínimo 4 puntos)
+  return scored.filter(x=>x.score>=Math.max(4, maxScore*0.7)).map(x=>x.id);
+}
+function selF(id){
+  FRAG=FRAG&&FRAG.id===id?null:FF().find(x=>x.id===id)||null;
+  rFrags();rOutfit();
+}
+function autoFrag(){
+  const sug=sugF();
+  const all=FF();
+  if(sug.length){
+    FRAG=all.find(f=>f.id===sug[Math.floor(Math.random()*sug.length)])||null;
+  }else if(all.length){
+    FRAG=all[Math.floor(Math.random()*all.length)];
+  }else{
+    FRAG=null;
+  }
+}
+function rFrags(){
+  const el=document.getElementById('frag-grid');
+  const lbl=document.getElementById('frag-section-label');
+  if(lbl&&WEATHER.length){
+    const hi=W()&&W().hi!=='--'?W().hi:20;
+    const calor=hi>=18;
+    const toneLabel=TOP?({'claro':'Top claro','oscuro':'Top oscuro','neutro':''}[topTone(TOP)]):'';
+    const parts=[`${calor?'Calor':'Frío'} · ${momento==='noche'?'🌙 Noche':'☀ Día'}`];
+    if(toneLabel) parts.push(toneLabel);
+    lbl.textContent=`Fragancia — ${parts.join(' · ')}`;
+  }
+  const all=FF();
+  if(!all.length){el.innerHTML='<span class="hint-placeholder">Añade fragancias en el Armario</span>';return}
+  const sug=sugF();
+  el.innerHTML=all.map(f=>{
+    const sel=FRAG&&FRAG.id===f.id;
+    const sg=sug.includes(f.id)&&!sel;
+    return`<button class="chip${sel?' active':sg?' suggest':''}" onclick="selF('${f.id}')">${f.label}${sg?' ✓':''}</button>`;
+  }).join('');
 }
 function autoSug(){
   if(!TOP)return;
@@ -613,6 +743,7 @@ function autoSug(){
   const sP=sugP(TOP);
   PNT=PP().find(p=>p.id===sP[0])||null;
   if(PNT){SHO=SS().find(s=>s.id===sugS(PNT)[0])||null}
+  if(!FRAG)autoFrag();
 }
 
 function rDayScroll(){
@@ -698,7 +829,6 @@ function rOutfit(){
   const wrap=document.getElementById('outfit-wrap');
   const cta=document.getElementById('save-cta');
   if(!TOP||!PNT||!SHO){wrap.innerHTML='';cta.style.display='none';return}
-  const frag=fragFor();
   let tips=[];
   if(W().rain>15)tips.push({t:'Lluvia posible — lleva algo encima',w:true});
   if(TOP.linen)tips.push({t:'Lino sin meter — look más fresco y natural',w:false});
@@ -711,10 +841,7 @@ function rOutfit(){
     <div class="outfit-item"><span class="outfit-cat">Top</span><span class="outfit-val">${TOP.label}</span><div class="outfit-dot"></div></div>
     <div class="outfit-item"><span class="outfit-cat">Pantalón</span><span class="outfit-val">${PNT.label}</span><div class="outfit-dot"></div></div>
     <div class="outfit-item"><span class="outfit-cat">Calzado</span><span class="outfit-val">${SHO.label}</span><div class="outfit-dot"></div></div>
-  </div>
-  <div class="frag-row">
-    <div class="frag-icon"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 1h4M7 1v2M3 5h8l-1 7H4L3 5z" stroke="#F5F3EE" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 7h8" stroke="#F5F3EE" stroke-width="1.3" stroke-linecap="round"/></svg></div>
-    <div><div class="frag-label">Fragancia del día</div><div class="frag-name">${frag}</div></div>
+    ${FRAG?`<div class="outfit-item"><span class="outfit-cat">Fragancia</span><span class="outfit-val">${FRAG.label}</span><div class="outfit-dot"></div></div>`:''}
   </div>
   ${tips.map(t=>`<div class="tip-row ${t.w?'tip-warn':'tip-info'}">${t.t}</div>`).join('')}`;
   cta.style.display='flex';
@@ -730,7 +857,8 @@ function rHistory(){
     <div class="hist-look">
       ${item.blazerLabel?`<span style="font-size:11px;color:var(--ink3);font-weight:600">${item.blazerLabel} · </span>`:''}
       ${item.topLabel}<br>
-      <span class="hist-sub">${item.pantLabel} · ${item.shoeLabel}</span><br>
+      <span class="hist-sub">${item.pantLabel} · ${item.shoeLabel}</span>
+      ${item.fragLabel?`<br><span class="hist-sub" style="font-style:italic">🧴 ${item.fragLabel}</span>`:''}<br>
       <span class="hist-ctx">${item.ctx==='oficina'?'Oficina':'Casual'}</span>
     </div>
     <button onclick="delH(${h.length-1-i})" style="font-size:20px;color:var(--ink3);background:none;border:none;cursor:pointer;padding:0 0 0 8px;line-height:1;font-weight:300">×</button>
@@ -746,6 +874,7 @@ function rArmario(){
     {key:'pants_casual',label:'Pantalones — casual'},
     {key:'shoes_oficina',label:'Calzado — oficina'},
     {key:'shoes_casual',label:'Calzado — casual'},
+    {key:'fragancias',label:'Fragancias'},
   ];
   document.getElementById('arm-sections').innerHTML=`<div style="height:8px"></div>`+cats.map(c=>`
   <div class="arm-cat">
@@ -766,9 +895,9 @@ function rArmario(){
   </div>`).join('');
 }
 
-function selDay(i){day=i;TOP=null;PNT=null;SHO=null;BLZ=null;showAllTops=false;rAll()}
+function selDay(i){day=i;TOP=null;PNT=null;SHO=null;BLZ=null;FRAG=null;showAllTops=false;rAll()}
 function setCtx(c){
-  ctx=c;TOP=null;PNT=null;SHO=null;BLZ=null;showAllTops=false;
+  ctx=c;TOP=null;PNT=null;SHO=null;BLZ=null;FRAG=null;showAllTops=false;
   document.getElementById('ctx-of').className='ctx-btn'+(c==='oficina'?' active':'');
   document.getElementById('ctx-ca').className='ctx-btn'+(c==='casual'?' active':'');
   document.getElementById('blazer-wrap').style.display='block';
@@ -778,11 +907,17 @@ function selB(id){BLZ=BLZ&&BLZ.id===id?null:BL().find(x=>x.id===id);rAll()}
 function selT(id){TOP=TT().find(x=>x.id===id);PNT=null;SHO=null;autoSug();rAll()}
 function selP(id){PNT=PP().find(x=>x.id===id);SHO=SS().find(s=>s.id===sugS(PNT)[0])||null;rAll()}
 function selS(id){SHO=SS().find(x=>x.id===id);rAll()}
-function resetOutfit(){TOP=null;PNT=null;SHO=null;BLZ=null;rAll()}
+function setMomento(m){
+  momento=m;FRAG=null;
+  document.getElementById('ctx-day').className='ctx-btn'+(m==='dia'?' active':'');
+  document.getElementById('ctx-night').className='ctx-btn'+(m==='noche'?' active':'');
+  rFrags();rOutfit();
+}
+function resetOutfit(){TOP=null;PNT=null;SHO=null;BLZ=null;FRAG=null;rAll()}
 
 function saveH(){
   if(!TOP||!PNT||!SHO)return;
-  S.h.push({day:W().day,blazer:BLZ?BLZ.id:null,blazerLabel:BLZ?BLZ.label:null,top:TOP.id,topLabel:TOP.label,pant:PNT.id,pantLabel:PNT.label,shoe:SHO.id,shoeLabel:SHO.label,ctx});
+  S.h.push({day:W().day,blazer:BLZ?BLZ.id:null,blazerLabel:BLZ?BLZ.label:null,top:TOP.id,topLabel:TOP.label,pant:PNT.id,pantLabel:PNT.label,shoe:SHO.id,shoeLabel:SHO.label,frag:FRAG?FRAG.id:null,fragLabel:FRAG?FRAG.label:null,ctx});
   saveS();document.getElementById('save-cta').style.display='none';rOutfit();
 }
 function delH(i){S.h.splice(i,1);saveS();rHistory()}
@@ -790,15 +925,37 @@ function toggleDel(){delMode=!delMode;rArmario()}
 function delItem(cat,id){const a=S.w[cat];const i=a.findIndex(x=>x.id===id);if(i>=0){a.splice(i,1);saveS();rArmario();}}
 
 let mCat='tops_oficina';
-function openM(cat){mCat=cat;document.getElementById('m-cat').value=cat;document.getElementById('m-label').value='';document.getElementById('m-color').value='';document.getElementById('modal-wrap').classList.add('open')}
+function updateModal(){
+  const cat=document.getElementById('m-cat').value;
+  const isFrag=cat==='fragancias';
+  document.getElementById('m-title').textContent=isFrag?'Añadir fragancia':'Añadir prenda';
+  document.getElementById('m-color-wrap').style.display=isFrag?'none':'block';
+  document.getElementById('m-frag-type').style.display=isFrag?'block':'none';
+  document.getElementById('m-label').placeholder=isFrag?'Nombre (ej: Bleu de Chanel EDP)':'Nombre (ej: Camisa azul Massimo Dutti)';
+}
+function openM(cat){
+  mCat=cat;
+  document.getElementById('m-cat').value=cat;
+  document.getElementById('m-label').value='';
+  document.getElementById('m-color').value='';
+  document.querySelectorAll('.frag-type-chk').forEach(c=>c.checked=false);
+  updateModal();
+  document.getElementById('modal-wrap').classList.add('open');
+}
 function closeM(){document.getElementById('modal-wrap').classList.remove('open')}
 function saveItem(){
   const label=document.getElementById('m-label').value.trim();
-  const color=document.getElementById('m-color').value.trim()||'varios';
   const cat=document.getElementById('m-cat').value;
-  if(!label){alert('Escribe el nombre de la prenda');return}
+  if(!label){alert(cat==='fragancias'?'Escribe el nombre de la fragancia':'Escribe el nombre de la prenda');return}
   if(!S.w[cat])S.w[cat]=[];
-  S.w[cat].push({id:cat+'_'+Date.now(),label,color});
+  if(cat==='fragancias'){
+    const types=[...document.querySelectorAll('.frag-type-chk:checked')].map(c=>c.value);
+    if(!types.length){alert('Selecciona al menos un tipo de fragancia');return}
+    S.w[cat].push({id:'frag_'+Date.now(),label,type:types});
+  }else{
+    const color=document.getElementById('m-color').value.trim()||'varios';
+    S.w[cat].push({id:cat+'_'+Date.now(),label,color});
+  }
   saveS();closeM();rArmario();
 }
 
@@ -815,7 +972,7 @@ function switchTab(t){
   if(t==='arm')rArmario();
 }
 
-function rAll(){rDayScroll();rWeather();rBlazer();rTops();rPants();rShoes();rOutfit()}
+function rAll(){rDayScroll();rWeather();rBlazer();rTops();rPants();rShoes();rFrags();rOutfit()}
 
 // Init
 initApp();
