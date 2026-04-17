@@ -295,7 +295,7 @@ body{
     </div>
 
     <div id="blazer-wrap">
-      <div class="section-label">Blazer (opcional)</div>
+      <div class="section-label">Chaqueta (opcional)</div>
       <div class="chip-row" id="blazer-grid"></div>
     </div>
 
@@ -347,7 +347,7 @@ body{
   <div class="modal">
     <div class="modal-title">Añadir prenda</div>
     <select id="m-cat">
-      <option value="blazers">Blazers</option>
+      <option value="blazers">Chaquetas</option>
       <option value="tops_oficina">Tops — oficina</option>
       <option value="tops_casual">Tops — casual</option>
       <option value="pants_oficina">Pantalones — oficina</option>
@@ -422,7 +422,7 @@ async function initApp(){
   rAll();
 }
 const DEF={
-  blazers:[{id:"b1",label:"Blazer navy Emblems",color:"navy"},{id:"b2",label:"Blazer camel Emblems",color:"camel"}],
+  blazers:[{id:"b1",label:"Blazer navy Emblems",color:"navy"},{id:"b2",label:"Blazer camel Emblems",color:"camel"},{id:"b3",label:"Chaqueta vaquera",color:"azul denim"}],
   tops_oficina:[
     {id:"t1",label:"Camisa blanca Scalpers",color:"blanco"},{id:"t2",label:"Camisa rayas grises",color:"gris"},
     {id:"t3",label:"Camisa verde oscuro Scalpers",color:"verde oscuro"},{id:"t4",label:"Camisa blanca puntos Boston",color:"blanco"},
@@ -435,7 +435,8 @@ const DEF={
     {id:"t17",label:"Jersey azul claro",color:"azul claro"},{id:"t18",label:"Jersey blanco",color:"blanco"},
     {id:"t19",label:"Jersey verde V-neck",color:"verde claro"},{id:"t20",label:"Jersey marrón cashmere",color:"marrón"},
     {id:"t21",label:"Polo navy Tommy HF piqué",color:"navy"},{id:"t22",label:"Camiseta flamé azul claro",color:"azul claro"},
-    {id:"t23",label:"Camiseta flamé gris oscuro",color:"gris oscuro"}
+    {id:"t23",label:"Camiseta flamé gris oscuro",color:"gris oscuro"},
+    {id:"t24",label:"Polo crudo Zara RF",color:"crudo"},{id:"t25",label:"Polo verde Zara RF",color:"verde"}
   ],
   tops_casual:[
     {id:"ct1",label:"Camisa palmeras verdes mc",color:"verde"},{id:"ct2",label:"Camisa cactus negra mc",color:"negro"},
@@ -444,7 +445,8 @@ const DEF={
     {id:"ct7",label:"Camiseta verde Tommy Jeans",color:"verde"},{id:"ct8",label:"Camiseta roja bordados",color:"rojo"},
     {id:"ct9",label:"Camiseta verde claro Levis",color:"verde claro"},{id:"ct10",label:"Camiseta rosa Nike",color:"rosa"},
     {id:"ct11",label:"Camiseta verde oscuro Adidas",color:"verde oscuro"},{id:"ct12",label:"Camiseta Dragon Ball",color:"varios"},
-    {id:"ct13",label:"Camiseta coral",color:"coral"},{id:"ct14",label:"Polo navy Tommy HF piqué",color:"navy"}
+    {id:"ct13",label:"Camiseta coral",color:"coral"},{id:"ct14",label:"Polo navy Tommy HF piqué",color:"navy"},
+    {id:"ct15",label:"Polo crudo Zara RF",color:"crudo"},{id:"ct16",label:"Polo verde Zara RF",color:"verde"}
   ],
   pants_oficina:[
     {id:"p1",label:"Pantalón marrón claro",color:"marrón claro",type:"largo"},
@@ -512,7 +514,7 @@ function colorGroup(c){
   if(c.includes('marrón claro'))return 'marrón claro';
   if(c.includes('marrón'))return 'marrón';
   if(c.includes('coral')||c.includes('rosa')||c.includes('rojo'))return 'cálido';
-  if(c.includes('beige')||c.includes('crema'))return 'neutro claro';
+  if(c.includes('beige')||c.includes('crema')||c.includes('crudo'))return 'neutro claro';
   return 'otros';
 }
 
@@ -552,7 +554,8 @@ const BLAZER_CLASH={
   'navy':['navy','azul oscuro','azul marino'],
   'camel':['camel','marrón claro','marrón'],
   'negro':['negro'],
-  'gris':['gris']
+  'gris':['gris'],
+  'denim':['denim','azul','azul oscuro']
 };
 
 function sugP(top){
@@ -699,12 +702,12 @@ function rOutfit(){
   let tips=[];
   if(W().rain>15)tips.push({t:'Lluvia posible — lleva algo encima',w:true});
   if(TOP.linen)tips.push({t:'Lino sin meter — look más fresco y natural',w:false});
-  if(ctx==='oficina'&&!BLZ)tips.push({t:'Añade un blazer — es el elemento de mayor impacto',w:false});
-  if(BLZ&&!blazerOk(BLZ,TOP))tips.push({t:'Revisa la combinación blazer + camisa',w:true});
+  if(!BLZ)tips.push({t:'Añade una chaqueta — es el elemento de mayor impacto',w:false});
+  if(BLZ&&!blazerOk(BLZ,TOP))tips.push({t:'Revisa la combinación chaqueta + camisa',w:true});
   wrap.innerHTML=`
   <div class="outfit-panel">
     <div class="outfit-header">Look del día</div>
-    ${BLZ?`<div class="outfit-item"><span class="outfit-cat">Blazer</span><span class="outfit-val">${BLZ.label}</span><div class="outfit-dot"></div></div>`:''}
+    ${BLZ?`<div class="outfit-item"><span class="outfit-cat">Chaqueta</span><span class="outfit-val">${BLZ.label}</span><div class="outfit-dot"></div></div>`:''}
     <div class="outfit-item"><span class="outfit-cat">Top</span><span class="outfit-val">${TOP.label}</span><div class="outfit-dot"></div></div>
     <div class="outfit-item"><span class="outfit-cat">Pantalón</span><span class="outfit-val">${PNT.label}</span><div class="outfit-dot"></div></div>
     <div class="outfit-item"><span class="outfit-cat">Calzado</span><span class="outfit-val">${SHO.label}</span><div class="outfit-dot"></div></div>
@@ -736,7 +739,7 @@ function rHistory(){
 
 function rArmario(){
   const cats=[
-    {key:'blazers',label:'Blazers'},
+    {key:'blazers',label:'Chaquetas'},
     {key:'tops_oficina',label:'Tops — oficina'},
     {key:'tops_casual',label:'Tops — casual'},
     {key:'pants_oficina',label:'Pantalones — oficina'},
@@ -768,7 +771,7 @@ function setCtx(c){
   ctx=c;TOP=null;PNT=null;SHO=null;BLZ=null;showAllTops=false;
   document.getElementById('ctx-of').className='ctx-btn'+(c==='oficina'?' active':'');
   document.getElementById('ctx-ca').className='ctx-btn'+(c==='casual'?' active':'');
-  document.getElementById('blazer-wrap').style.display=c==='oficina'?'block':'none';
+  document.getElementById('blazer-wrap').style.display='block';
   rAll();
 }
 function selB(id){BLZ=BLZ&&BLZ.id===id?null:BL().find(x=>x.id===id);rAll()}
@@ -812,7 +815,7 @@ function switchTab(t){
   if(t==='arm')rArmario();
 }
 
-function rAll(){rDayScroll();rWeather();if(ctx==='oficina')rBlazer();rTops();rPants();rShoes();rOutfit()}
+function rAll(){rDayScroll();rWeather();rBlazer();rTops();rPants();rShoes();rOutfit()}
 
 // Init
 initApp();
