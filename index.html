@@ -318,6 +318,8 @@ body{
       Guardar look
     </button>
     <div class="reset-lnk" onclick="resetOutfit()">Resetear</div>
+    <div class="reset-lnk" style="color:#C0392B;font-size:11px" onclick="debugFrags()">🔍 Debug fragancias</div>
+    <div id="debug-out" style="margin:0 20px;font-size:11px;color:#333;background:#f0f0f0;padding:10px;border-radius:8px;display:none;word-break:break-all;white-space:pre-wrap"></div>
   </div>
 
   <div id="panel-hist" style="display:none">
@@ -524,21 +526,21 @@ const pick=a=>a[Math.floor(Math.random()*a.length)];
 
 function loadS(){
   try{
-    const s=JSON.parse(localStorage.getItem('drape_v2')||'null');
-    if(s){
-      // Migrate fragancias: add if missing OR replace if using old type format
-      const oldTypes=['formal','fresh','smart']; // tipos del formato viejo
-      const needsMigration=!s.w.fragancias||
-        s.w.fragancias.some(f=>f.type&&f.type.some(t=>oldTypes.includes(t)));
-      if(needsMigration) s.w.fragancias=JSON.parse(JSON.stringify(DEF_FRAGS));
-      return s;
+    // drape_v3 forces fresh fragancias with new type format
+    const s=JSON.parse(localStorage.getItem('drape_v3')||'null');
+    if(s) return s;
+    // Migrate wardrobe data from v2 if exists, but always use fresh fragancias
+    const old=JSON.parse(localStorage.getItem('drape_v2')||'null');
+    if(old){
+      old.w.fragancias=JSON.parse(JSON.stringify(DEF_FRAGS));
+      return old;
     }
   }catch(e){}
   const def=JSON.parse(JSON.stringify(DEF));
   def.fragancias=JSON.parse(JSON.stringify(DEF_FRAGS));
   return{w:def,h:[]};
 }
-function saveS(){try{localStorage.setItem('drape_v2',JSON.stringify(S))}catch(e){}}
+function saveS(){try{localStorage.setItem('drape_v3',JSON.stringify(S))}catch(e){}}
 let S=loadS();
 let day=0,ctx='oficina',momento='dia',BLZ=null,TOP=null,PNT=null,SHO=null,FRAG=null,delMode=false,curTab='look',showAllTops=false;
 
@@ -713,12 +715,12 @@ function fragScore(frag){
 function sugF(){
   const all=FF();
   if(!all.length) return [];
+  // Sin top seleccionado: no hay sugerencias, el usuario elige libremente
+  if(!TOP) return [];
   const scored=all.map(f=>({id:f.id,score:fragScore(f)})).sort((a,b)=>b.score-a.score);
   const maxScore=scored[0].score;
-  // Umbral más exigente: 80% del máximo, mínimo score de 3
   const threshold=Math.max(3, maxScore*0.80);
   const suggested=scored.filter(x=>x.score>=threshold).map(x=>x.id);
-  // Máximo 4 sugerencias para no mostrar demasiadas
   return suggested.slice(0,4);
 }
 function selF(id){
@@ -749,6 +751,7 @@ function rFrags(){
   }
   const all=FF();
   if(!all.length){el.innerHTML='<span class="hint-placeholder">Añade fragancias en el Armario</span>';return}
+  if(!TOP){el.innerHTML='<span class="hint-placeholder">Elige primero un top para ver sugerencias</span>';return}
   const sug=sugF();
   el.innerHTML=all.map(f=>{
     const sel=FRAG&&FRAG.id===f.id;
@@ -933,6 +936,48 @@ function setMomento(m){
   rFrags();rOutfit();
 }
 function resetOutfit(){TOP=null;PNT=null;SHO=null;BLZ=null;FRAG=null;rAll()}
+function debugFrags(){
+  const el=document.getElementById('debug-out');
+  el.style.display='block';
+  const frags=FF();
+  const hi=W()&&W().hi!=='--'?W().hi:20;
+  const calor=hi>=18;
+  const climaMomento=calor?(momento==='noche'?'calor-noche':'calor-dia'):(momento==='noche'?'frio-noche':'frio-dia');
+  const tone=TOP?topTone(TOP):'(sin top)';
+  let out=`TOP: ${TOP?TOP.label+' ('+TOP.color+')':'null'}\n`;
+  out+=`Tone: ${tone} | Ctx: ${ctx} | Clima: ${climaMomento}\n`;
+  out+=`LS v3: ${localStorage.getItem('drape_v3')?'OK':'MISSING'} | LS v2: ${localStorage.getItem('drape_v2')?'OK':'MISSING'}\n\n`;
+  out+=`Fragancias (${frags.length}):\n`;
+  frags.forEach(f=>{
+    const s=TOP?fragScore(f).toFixed(1):'?';
+    out+=`${f.label}: [${(f.type||[]).join(',')}] s=${s}\n`;
+  });
+  const sug=TOP?sugF():[];
+  out+=`\nSugeridas IDs: ${sug.join(', ')||'ninguna'}`;
+  el.textContent=out;
+}
+  const el=document.getElementById('debug-out');
+  el.style.display='block';
+  const frags=FF();
+  const hi=W()&&W().hi!=='--'?W().hi:20;
+  const calor=hi>=18;
+  const climaMomento=calor?(momento==='noche'?'calor-noche':'calor-dia'):(momento==='noche'?'frio-noche':'frio-dia');
+  const tone=TOP?topTone(TOP):'(sin top)';
+  const ctx_=ctx;
+  let out=`TOP: ${TOP?TOP.label+' ('+TOP.color+')':'null'}\n`;
+  out+=`Tone: ${tone} | Ctx: ${ctx_} | Clima: ${climaMomento}\n`;
+  out+=`LS key v3: ${localStorage.getItem('drape_v3')?'EXISTS':'MISSING'}\n`;
+  out+=`LS key v2: ${localStorage.getItem('drape_v2')?'EXISTS':'MISSING'}\n\n`;
+  out+=`Fragancias en memoria (${frags.length}):\n`;
+  frags.forEach(f=>{
+    const s=TOP?fragScore(f).toFixed(1):'?';
+    out+=`  ${f.label}: [${(f.type||[]).join(',')}] score=${s}\n`;
+  });
+  const sug=TOP?sugF():[];
+  out+=`\nSugeridas: ${sug.length>0?sug.join(', '):'ninguna'}`;
+  el.textContent=out;
+}
+function resetDebug(){document.getElementById('debug-out').style.display='none'}
 
 function saveH(){
   if(!TOP||!PNT||!SHO)return;
