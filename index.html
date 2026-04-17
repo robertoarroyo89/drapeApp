@@ -526,8 +526,11 @@ function loadS(){
   try{
     const s=JSON.parse(localStorage.getItem('drape_v2')||'null');
     if(s){
-      // Migrate: add fragancias if missing
-      if(!s.w.fragancias)s.w.fragancias=JSON.parse(JSON.stringify(DEF_FRAGS));
+      // Migrate fragancias: add if missing OR replace if using old type format
+      const oldTypes=['formal','fresh','smart']; // tipos del formato viejo
+      const needsMigration=!s.w.fragancias||
+        s.w.fragancias.some(f=>f.type&&f.type.some(t=>oldTypes.includes(t)));
+      if(needsMigration) s.w.fragancias=JSON.parse(JSON.stringify(DEF_FRAGS));
       return s;
     }
   }catch(e){}
