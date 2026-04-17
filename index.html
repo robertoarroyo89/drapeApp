@@ -426,6 +426,37 @@ const BLAZER_CLASH={
   'denim': ['denim','azul','azul oscuro']
 };
 
+// Qué color de chaqueta combina mejor con cada color de top
+const BLAZER_RULES={
+  'blanco':      ['navy','camel','denim','gris'],
+  'negro':       ['camel','gris','denim'],
+  'gris':        ['navy','camel','denim'],
+  'navy':        ['camel','gris'],
+  'azul':        ['camel','gris'],
+  'azul oscuro': ['camel','gris'],
+  'verde':       ['camel','gris','denim'],
+  'verde oscuro':['camel','gris'],
+  'camel':       ['navy','gris','denim'],
+  'marrón claro':['navy','gris','denim'],
+  'marrón':      ['navy','gris','denim'],
+  'cálido':      ['navy','gris','camel','denim'],
+  'denim':       ['navy','camel','gris'],
+  'otros':       ['navy','camel','gris','denim']
+};
+
+function sugB(top){
+  if(!top) return [];
+  const bl=BL();
+  const tc=colorGroup(top.color);
+  const priority=BLAZER_RULES[tc]||BLAZER_RULES['otros'];
+  return bl
+    .filter(b=>blazerOk(b,top)) // solo las que no clashean
+    .map(b=>({id:b.id,score:priority.indexOf(colorGroup(b.color))}))
+    .filter(x=>x.score>=0)
+    .sort((a,b)=>a.score-b.score)
+    .map(x=>x.id);
+}
+
 function sugP(top){
   const p=PP(),tc=colorGroup(top.color),hi=W().hi;
   if(ctx==='casual')return hi>=20?p.filter(x=>x.type==='corto').map(x=>x.id):p.map(x=>x.id);
@@ -478,10 +509,15 @@ function rWeather(){
 }
 
 function rBlazer(){
-  document.getElementById('blazer-grid').innerHTML=BL().map(b=>{
+  const bl=BL();
+  const el=document.getElementById('blazer-grid');
+  if(!bl.length){el.innerHTML='';return}
+  const sug=TOP?sugB(TOP):[];
+  el.innerHTML=bl.map(b=>{
     const sel=BLZ&&BLZ.id===b.id;
     const ok=blazerOk(b,TOP);
-    return`<button class="chip${sel?' active':''}" style="${!ok&&!sel?'opacity:.35':''}" onclick="selB('${b.id}')">${b.label}${!ok&&!sel?' ⚠':''}</button>`;
+    const sg=sug.includes(b.id)&&!sel;
+    return`<button class="chip${sel?' active':sg?' suggest':!ok&&!sel?' muted':''}" onclick="selB('${b.id}')">${b.label}${sg?' ✓':''}</button>`;
   }).join('');
 }
 
@@ -543,7 +579,7 @@ function rOutfit(){
   if(W().rain>15)tips.push({t:'Lluvia posible — lleva algo encima',w:true});
   if(TOP.linen)tips.push({t:'Lino sin meter — look más fresco y natural',w:false});
   if(!BLZ)tips.push({t:'Añade una chaqueta — es el elemento de mayor impacto',w:false});
-  if(BLZ&&!blazerOk(BLZ,TOP))tips.push({t:'Revisa la combinación chaqueta + camisa',w:true});
+  if(BLZ&&!blazerOk(BLZ,TOP))tips.push({t:'Colores de chaqueta y top demasiado similares — pueden chocar',w:true});
   wrap.innerHTML=`
   <div class="outfit-panel">
     <div class="outfit-header">Look del día</div>
