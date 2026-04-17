@@ -22,7 +22,6 @@
   --surface:#F5F3EE;
   --card:#FFFFFF;
   --border:#D8D5CE;
-  /* FIXED: chips now have strong contrast */
   --chip-bg:#E0DDD5;
   --chip-txt:#1A1A1A;
   --chip-active-bg:#0D0D0D;
@@ -34,155 +33,59 @@
   --warn-txt:#78350F;
   --warn-border:#E8B44A;
   --green:#1B4D2A;
-  --amber:#6B3D00;
   --radius:10px;
   --radius-lg:16px;
   --radius-pill:100px;
   --shadow-sm:0 1px 3px rgba(0,0,0,.06);
   --shadow-md:0 2px 8px rgba(0,0,0,.08);
 }
-body{
-  font-family:'DM Sans','Helvetica Neue',Helvetica,Arial,sans-serif;
-  background:var(--surface);
-  color:var(--ink);
-  -webkit-font-smoothing:antialiased;
-  -moz-osx-font-smoothing:grayscale;
-  overscroll-behavior:none;
-}
-
-/* === LAYOUT === */
+body{font-family:'DM Sans','Helvetica Neue',Helvetica,Arial,sans-serif;background:var(--surface);color:var(--ink);-webkit-font-smoothing:antialiased;overscroll-behavior:none}
 .screen{background:var(--surface);max-width:430px;margin:0 auto;padding-bottom:90px;min-height:100dvh}
-
-/* === TOPBAR === */
 .topbar{display:flex;align-items:center;justify-content:space-between;padding:16px 20px 0}
 .brand{font-size:18px;font-weight:700;letter-spacing:-.5px;color:var(--ink)}
 .brand span{color:var(--ink3);font-weight:400}
-.weather-chip{
-  display:flex;align-items:center;gap:5px;
-  background:var(--card);border-radius:var(--radius-pill);
-  padding:6px 12px;font-size:12px;color:var(--ink2);font-weight:600;
-  border:1px solid var(--border);box-shadow:var(--shadow-sm);
-}
-
-/* === DAY SCROLL === */
+.weather-chip{display:flex;align-items:center;gap:5px;background:var(--card);border-radius:var(--radius-pill);padding:6px 12px;font-size:12px;color:var(--ink2);font-weight:600;border:1px solid var(--border);box-shadow:var(--shadow-sm)}
 .day-scroll{display:flex;gap:8px;padding:14px 20px 0;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
 .day-scroll::-webkit-scrollbar{display:none}
-.day-pill{
-  flex-shrink:0;padding:8px 16px;border-radius:var(--radius-pill);
-  background:var(--card);font-size:12px;font-weight:600;color:var(--ink2);
-  cursor:pointer;border:1px solid var(--border);
-  transition:all .15s ease;box-shadow:var(--shadow-sm);
-  -webkit-tap-highlight-color:transparent;
-}
+.day-pill{flex-shrink:0;padding:8px 16px;border-radius:var(--radius-pill);background:var(--card);font-size:12px;font-weight:600;color:var(--ink2);cursor:pointer;border:1px solid var(--border);transition:all .15s ease;box-shadow:var(--shadow-sm);-webkit-tap-highlight-color:transparent}
 .day-pill:active{transform:scale(.96)}
 .day-pill.active{background:var(--ink);color:var(--chip-active-txt);border-color:var(--ink);box-shadow:0 2px 8px rgba(13,13,13,.2)}
-
-/* === TABS === */
 .tab-indicator{display:flex;gap:0;margin:14px 20px 0;background:var(--chip-bg);border-radius:var(--radius-pill);padding:3px;border:1px solid var(--border)}
-.tab-ind-btn{
-  flex:1;padding:9px 8px;font-size:12px;font-weight:600;cursor:pointer;
-  border:none;background:transparent;color:var(--ink3);border-radius:var(--radius-pill);
-  transition:all .15s ease;-webkit-tap-highlight-color:transparent;
-}
+.tab-ind-btn{flex:1;padding:9px 8px;font-size:12px;font-weight:600;cursor:pointer;border:none;background:transparent;color:var(--ink3);border-radius:var(--radius-pill);transition:all .15s ease;-webkit-tap-highlight-color:transparent}
 .tab-ind-btn.active{background:var(--card);color:var(--ink);border:1px solid var(--border);box-shadow:var(--shadow-sm)}
-
-/* === SECTION LABELS === */
 .section-label{font-size:10px;font-weight:700;letter-spacing:.12em;color:var(--ink3);text-transform:uppercase;padding:20px 20px 10px}
-
-/* === CHIPS (THE BIG FIX) === */
 .chip-row{display:flex;flex-wrap:wrap;gap:8px;padding:0 20px}
-.chip{
-  padding:9px 15px;border-radius:var(--radius-pill);
-  background:var(--card);
-  font-size:13px;font-weight:500;
-  color:var(--ink);
-  cursor:pointer;
-  border:1.5px solid var(--border);
-  transition:all .15s ease;
-  box-shadow:var(--shadow-sm);
-  -webkit-tap-highlight-color:transparent;
-}
-.chip:hover{background:#F0EDE6;border-color:#C5C1B8}
+.chip{padding:9px 15px;border-radius:var(--radius-pill);background:var(--card);font-size:13px;font-weight:500;color:var(--ink);cursor:pointer;border:1.5px solid var(--border);transition:all .15s ease;box-shadow:var(--shadow-sm);-webkit-tap-highlight-color:transparent}
 .chip:active{transform:scale(.97)}
-.chip.active{
-  background:var(--ink);color:var(--chip-active-txt);border-color:var(--ink);
-  box-shadow:0 2px 8px rgba(13,13,13,.18);
-}
-.chip.suggest{
-  background:var(--suggest-bg);color:var(--suggest-txt);
-  border-color:var(--suggest-border);font-weight:600;
-}
-.chip.warn{
-  background:var(--warn-bg);color:var(--warn-txt);
-  border-color:var(--warn-border);
-}
+.chip.active{background:var(--ink);color:var(--chip-active-txt);border-color:var(--ink);box-shadow:0 2px 8px rgba(13,13,13,.18)}
+.chip.suggest{background:var(--suggest-bg);color:var(--suggest-txt);border-color:var(--suggest-border);font-weight:600}
+.chip.warn{background:var(--warn-bg);color:var(--warn-txt);border-color:var(--warn-border)}
 .chip.muted{opacity:.35;cursor:default;box-shadow:none}
-.chip.chip-more{
-  background:transparent;color:var(--ink3);border-style:dashed;border-color:var(--border);
-  font-weight:600;font-size:12px;box-shadow:none;
-}
-
-/* === CONTEXT BUTTONS === */
+.chip.chip-more{background:transparent;color:var(--ink3);border-style:dashed;border-color:var(--border);font-weight:600;font-size:12px;box-shadow:none}
 .ctx-row{display:flex;gap:8px;padding:12px 20px 0}
-.ctx-btn{
-  flex:1;text-align:center;padding:11px;border-radius:var(--radius);
-  background:var(--card);font-size:13px;font-weight:600;color:var(--ink2);
-  cursor:pointer;border:1.5px solid var(--border);
-  transition:all .15s ease;box-shadow:var(--shadow-sm);
-  -webkit-tap-highlight-color:transparent;
-}
+.ctx-btn{flex:1;text-align:center;padding:11px;border-radius:var(--radius);background:var(--card);font-size:13px;font-weight:600;color:var(--ink2);cursor:pointer;border:1.5px solid var(--border);transition:all .15s ease;box-shadow:var(--shadow-sm);-webkit-tap-highlight-color:transparent}
 .ctx-btn:active{transform:scale(.97)}
 .ctx-btn.active{background:var(--ink);color:var(--chip-active-txt);border-color:var(--ink);box-shadow:0 2px 8px rgba(13,13,13,.18)}
-
-/* === OUTFIT PANEL === */
-.outfit-panel{
-  margin:20px 20px 0;background:var(--card);border-radius:var(--radius-lg);
-  border:1px solid var(--border);overflow:hidden;box-shadow:var(--shadow-md);
-}
+.outfit-panel{margin:20px 20px 0;background:var(--card);border-radius:var(--radius-lg);border:1px solid var(--border);overflow:hidden;box-shadow:var(--shadow-md)}
 .outfit-header{padding:14px 18px 0;font-size:10px;font-weight:700;letter-spacing:.12em;color:var(--ink3);text-transform:uppercase}
 .outfit-item{display:flex;align-items:center;padding:13px 18px;border-bottom:1px solid var(--border)}
 .outfit-item:last-child{border-bottom:none}
 .outfit-cat{font-size:10px;font-weight:700;color:var(--ink3);width:68px;flex-shrink:0;text-transform:uppercase;letter-spacing:.05em}
 .outfit-val{font-size:14px;font-weight:500;color:var(--ink);flex:1}
 .outfit-dot{width:8px;height:8px;border-radius:50%;background:var(--green);flex-shrink:0}
-
-/* === FRAGRANCE === */
-/* Fragrance section uses chip-row like the rest */
-
-/* === TIPS === */
 .tip-row{margin:8px 20px 0;padding:12px 14px;font-size:12px;font-weight:500;border-left:3px solid;border-radius:0 6px 6px 0}
 .tip-warn{color:var(--warn-txt);background:var(--warn-bg);border-color:#D4A017}
 .tip-info{color:var(--suggest-txt);background:var(--suggest-bg);border-color:#3B8A52}
-
-/* === CTA === */
-.cta-btn{
-  margin:18px 20px 0;width:calc(100% - 40px);padding:15px;border-radius:var(--radius-lg);
-  background:var(--ink);color:#F5F3EE;font-size:14px;font-weight:700;letter-spacing:-.2px;
-  border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;
-  box-shadow:0 3px 12px rgba(13,13,13,.2);transition:all .15s ease;
-  -webkit-tap-highlight-color:transparent;
-}
+.cta-btn{margin:18px 20px 0;width:calc(100% - 40px);padding:15px;border-radius:var(--radius-lg);background:var(--ink);color:#F5F3EE;font-size:14px;font-weight:700;letter-spacing:-.2px;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 3px 12px rgba(13,13,13,.2);transition:all .15s ease;-webkit-tap-highlight-color:transparent}
 .cta-btn:active{transform:scale(.98);opacity:.9}
 .save-check{width:18px;height:18px;border-radius:50%;background:#F5F3EE;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-
 .reset-lnk{display:block;text-align:center;margin:12px 20px 0;font-size:12px;font-weight:500;color:var(--ink3);cursor:pointer;padding:8px;-webkit-tap-highlight-color:transparent}
-
-/* === BOTTOM NAV (FIXED) === */
-.nav-bar{
-  display:flex;padding:10px 20px 20px;gap:0;
-  border-top:1px solid var(--border);background:var(--card);
-  position:fixed;bottom:0;left:0;right:0;max-width:430px;margin:0 auto;
-  z-index:100;
-  box-shadow:0 -2px 10px rgba(0,0,0,.04);
-  padding-bottom:max(20px, env(safe-area-inset-bottom));
-}
+.nav-bar{display:flex;padding:10px 20px;border-top:1px solid var(--border);background:var(--card);position:fixed;bottom:0;left:0;right:0;max-width:430px;margin:0 auto;z-index:100;box-shadow:0 -2px 10px rgba(0,0,0,.04);padding-bottom:max(10px,env(safe-area-inset-bottom))}
 .nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;padding:4px 0;-webkit-tap-highlight-color:transparent}
 .nav-icon{width:22px;height:22px;display:flex;align-items:center;justify-content:center;color:var(--ink3);transition:color .15s}
 .nav-lbl{font-size:10px;font-weight:600;color:var(--ink3);letter-spacing:.02em;transition:color .15s}
 .nav-item.active .nav-icon{color:var(--ink)}
 .nav-item.active .nav-lbl{color:var(--ink)}
-
-/* === HISTORY === */
 .hist-item{display:flex;align-items:flex-start;gap:12px;padding:14px 18px;border-bottom:1px solid var(--border)}
 .hist-item:last-child{border-bottom:none}
 .hist-day{font-size:11px;font-weight:700;color:var(--ink3);width:52px;flex-shrink:0;padding-top:2px;letter-spacing:.02em}
@@ -190,80 +93,34 @@ body{
 .hist-sub{color:var(--ink2);font-weight:400}
 .hist-ctx{display:inline-block;font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px;background:var(--chip-bg);color:var(--ink2);margin-top:4px;border:1px solid var(--border)}
 .empty-state{text-align:center;padding:40px 20px;color:var(--ink3);font-size:13px;font-weight:500;line-height:1.7}
-
-/* === ARMARIO === */
+.hint-placeholder{font-size:12px;font-weight:500;color:var(--ink3);padding:2px 0}
 .arm-cat{padding:0 20px 20px}
 .arm-cat-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
 .arm-cat-title{font-size:10px;font-weight:700;letter-spacing:.12em;color:var(--ink3);text-transform:uppercase}
 .arm-actions{display:flex;gap:8px}
-.arm-btn{
-  font-size:11px;font-weight:600;padding:6px 12px;border-radius:var(--radius-pill);
-  border:1px solid var(--border);background:var(--card);color:var(--ink2);cursor:pointer;
-  transition:all .15s;-webkit-tap-highlight-color:transparent;
-}
+.arm-btn{font-size:11px;font-weight:600;padding:6px 12px;border-radius:var(--radius-pill);border:1px solid var(--border);background:var(--card);color:var(--ink2);cursor:pointer;transition:all .15s;-webkit-tap-highlight-color:transparent}
 .arm-btn:active{transform:scale(.96)}
 .arm-btn.del-mode{border-color:#C0392B;color:#C0392B;background:#FDECEA}
 .arm-grid{display:flex;flex-wrap:wrap;gap:7px}
-.arm-chip{
-  padding:8px 14px;border-radius:var(--radius-pill);
-  background:var(--card);
-  font-size:12px;font-weight:500;
-  color:var(--ink);
-  position:relative;display:inline-flex;align-items:center;gap:6px;
-  border:1px solid var(--border);box-shadow:var(--shadow-sm);
-}
+.arm-chip{padding:8px 14px;border-radius:var(--radius-pill);background:var(--card);font-size:12px;font-weight:500;color:var(--ink);position:relative;display:inline-flex;align-items:center;gap:6px;border:1px solid var(--border);box-shadow:var(--shadow-sm)}
 .arm-del{width:16px;height:16px;border-radius:50%;background:#C0392B;color:#fff;font-size:9px;font-weight:700;display:none;align-items:center;justify-content:center;cursor:pointer;border:none;flex-shrink:0;line-height:1}
 .del-mode-active .arm-del{display:flex}
-
-/* === MODAL === */
-.modal-overlay{
-  position:fixed;top:0;left:0;right:0;bottom:0;
-  background:rgba(13,13,13,0.5);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);
-  display:none;align-items:flex-end;justify-content:center;
-  z-index:200;padding:20px;
-}
+.modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(13,13,13,0.5);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);display:none;align-items:flex-end;justify-content:center;z-index:200;padding:20px}
 .modal-overlay.open{display:flex}
-.modal{
-  background:var(--card);border-radius:var(--radius-lg) var(--radius-lg) 0 0;
-  padding:24px 20px max(20px, env(safe-area-inset-bottom));
-  width:100%;max-width:430px;
-  border:1px solid var(--border);
-  box-shadow:0 -4px 24px rgba(0,0,0,.12);
-  animation:slideUp .25s ease;
-}
+.modal{background:var(--card);border-radius:var(--radius-lg) var(--radius-lg) 0 0;padding:24px 20px;padding-bottom:max(20px,env(safe-area-inset-bottom));width:100%;max-width:430px;border:1px solid var(--border);box-shadow:0 -4px 24px rgba(0,0,0,.12);animation:slideUp .25s ease}
 @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
 .modal-title{font-size:16px;font-weight:700;color:var(--ink);margin-bottom:18px}
-.modal select,.modal input{
-  width:100%;margin-bottom:12px;padding:12px 14px;
-  border:1.5px solid var(--border);border-radius:var(--radius);
-  background:var(--surface);color:var(--ink);font-size:14px;font-weight:500;
-  font-family:inherit;outline:none;
-  transition:border-color .15s;
-}
+.modal select,.modal input{width:100%;margin-bottom:12px;padding:12px 14px;border:1.5px solid var(--border);border-radius:var(--radius);background:var(--surface);color:var(--ink);font-size:14px;font-weight:500;font-family:inherit;outline:none;transition:border-color .15s}
 .modal select:focus,.modal input:focus{border-color:var(--ink)}
 .modal-row{display:flex;gap:10px;margin-top:4px}
-.modal-cancel{
-  flex:1;padding:14px;border-radius:var(--radius);
-  border:1.5px solid var(--border);background:var(--card);
-  font-size:14px;font-weight:600;cursor:pointer;color:var(--ink2);
-  font-family:inherit;-webkit-tap-highlight-color:transparent;
-}
-.modal-ok{
-  flex:1;padding:14px;border-radius:var(--radius);border:none;
-  background:var(--ink);font-size:14px;font-weight:600;cursor:pointer;color:#F5F3EE;
-  font-family:inherit;-webkit-tap-highlight-color:transparent;
-}
+.modal-cancel{flex:1;padding:14px;border-radius:var(--radius);border:1.5px solid var(--border);background:var(--card);font-size:14px;font-weight:600;cursor:pointer;color:var(--ink2);font-family:inherit;-webkit-tap-highlight-color:transparent}
+.modal-ok{flex:1;padding:14px;border-radius:var(--radius);border:none;background:var(--ink);font-size:14px;font-weight:600;cursor:pointer;color:#F5F3EE;font-family:inherit;-webkit-tap-highlight-color:transparent}
 .modal-cancel:active,.modal-ok:active{transform:scale(.98)}
-
-/* Placeholder empty hint */
-.hint-placeholder{font-size:12px;font-weight:500;color:var(--ink3);padding:2px 0}
 </style>
 </head>
 <body>
 
 <div class="screen">
-  <h2 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">Drape — planificador de outfits diarios</h2>
-
   <div class="topbar">
     <div style="display:flex;align-items:center;gap:9px">
       <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
@@ -274,7 +131,7 @@ body{
       </svg>
       <span class="brand">drape<span>.app</span></span>
     </div>
-    <div class="weather-chip" id="w-chip"></div>
+    <div class="weather-chip" id="w-chip">🌤 --°C</div>
   </div>
 
   <div class="day-scroll" id="day-scroll"></div>
@@ -285,14 +142,11 @@ body{
     <button class="tab-ind-btn" id="tab-arm" onclick="switchTab('arm')">Armario</button>
   </div>
 
+  <!-- LOOK -->
   <div id="panel-look">
     <div class="ctx-row">
       <button class="ctx-btn active" id="ctx-of" onclick="setCtx('oficina')">Oficina</button>
       <button class="ctx-btn" id="ctx-ca" onclick="setCtx('casual')">Casual</button>
-    </div>
-    <div class="ctx-row" style="padding-top:8px">
-      <button class="ctx-btn active" id="ctx-day" onclick="setMomento('dia')">☀ Día</button>
-      <button class="ctx-btn" id="ctx-night" onclick="setMomento('noche')">🌙 Noche</button>
     </div>
 
     <div id="blazer-wrap">
@@ -309,30 +163,30 @@ body{
     <div class="section-label">Calzado</div>
     <div class="chip-row" id="shoes-grid"></div>
 
-    <div class="section-label" id="frag-section-label">Fragancia</div>
-    <div class="chip-row" id="frag-grid"></div>
-
     <div id="outfit-wrap"></div>
+
     <button class="cta-btn" id="save-cta" onclick="saveH()" style="display:none">
-      <div class="save-check"><svg width="9" height="7" viewBox="0 0 9 7" fill="none"><path d="M1 3.5L3.5 6L8 1" stroke="#0D0D0D" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="save-check">
+        <svg width="9" height="7" viewBox="0 0 9 7" fill="none"><path d="M1 3.5L3.5 6L8 1" stroke="#0D0D0D" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
       Guardar look
     </button>
     <div class="reset-lnk" onclick="resetOutfit()">Resetear</div>
-    <div class="reset-lnk" style="color:#C0392B;font-size:11px" onclick="debugFrags()">🔍 Debug fragancias</div>
-    <div id="debug-out" style="margin:0 20px;font-size:11px;color:#333;background:#f0f0f0;padding:10px;border-radius:8px;display:none;word-break:break-all;white-space:pre-wrap"></div>
   </div>
 
+  <!-- HISTORIAL -->
   <div id="panel-hist" style="display:none">
     <div class="section-label">Looks guardados</div>
     <div style="margin:0 20px;background:var(--card);border-radius:var(--radius-lg);border:1px solid var(--border);overflow:hidden;box-shadow:var(--shadow-sm)" id="hist-list"></div>
   </div>
 
+  <!-- ARMARIO -->
   <div id="panel-arm" style="display:none">
     <div id="arm-sections"></div>
   </div>
 </div>
 
-<!-- BOTTOM NAV (fixed) -->
+<!-- NAV -->
 <div class="nav-bar">
   <div class="nav-item active" id="nav-look" onclick="switchTab('look')">
     <div class="nav-icon"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="2" y="2" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.5"/><rect x="10" y="2" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.5"/><rect x="2" y="10" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.5"/><rect x="10" y="10" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.5"/></svg></div>
@@ -348,11 +202,11 @@ body{
   </div>
 </div>
 
-<!-- MODAL (full-screen overlay) -->
+<!-- MODAL -->
 <div class="modal-overlay" id="modal-wrap">
   <div class="modal">
-    <div class="modal-title" id="m-title">Añadir prenda</div>
-    <select id="m-cat" onchange="updateModal()">
+    <div class="modal-title">Añadir prenda</div>
+    <select id="m-cat">
       <option value="blazers">Chaquetas</option>
       <option value="tops_oficina">Tops — oficina</option>
       <option value="tops_casual">Tops — casual</option>
@@ -360,21 +214,9 @@ body{
       <option value="pants_casual">Pantalones — casual</option>
       <option value="shoes_oficina">Calzado — oficina</option>
       <option value="shoes_casual">Calzado — casual</option>
-      <option value="fragancias">Fragancias</option>
     </select>
     <input type="text" id="m-label" placeholder="Nombre (ej: Camisa azul Massimo Dutti)"/>
-    <div id="m-color-wrap">
-      <input type="text" id="m-color" placeholder="Color principal (ej: azul)"/>
-    </div>
-    <div id="m-frag-type" style="display:none">
-      <div style="font-size:12px;font-weight:600;color:var(--ink3);margin-bottom:8px">Tipo de fragancia (puedes elegir varios):</div>
-      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px">
-        <label style="display:flex;align-items:center;gap:4px;font-size:13px;color:var(--ink2);cursor:pointer"><input type="checkbox" value="formal" class="frag-type-chk"> Formal</label>
-        <label style="display:flex;align-items:center;gap:4px;font-size:13px;color:var(--ink2);cursor:pointer"><input type="checkbox" value="smart" class="frag-type-chk"> Smart</label>
-        <label style="display:flex;align-items:center;gap:4px;font-size:13px;color:var(--ink2);cursor:pointer"><input type="checkbox" value="casual" class="frag-type-chk"> Casual</label>
-        <label style="display:flex;align-items:center;gap:4px;font-size:13px;color:var(--ink2);cursor:pointer"><input type="checkbox" value="fresh" class="frag-type-chk"> Fresco</label>
-      </div>
-    </div>
+    <input type="text" id="m-color" placeholder="Color principal (ej: azul)"/>
     <div class="modal-row">
       <button class="modal-cancel" onclick="closeM()">Cancelar</button>
       <button class="modal-ok" onclick="saveItem()">Añadir</button>
@@ -383,7 +225,7 @@ body{
 </div>
 
 <script>
-// === WEATHER: Dynamic via Open-Meteo (free, no API key) with fallback ===
+// ── WEATHER ──────────────────────────────────────────────────────────────────
 const DAYS_ES=['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
 let WEATHER=[];
 
@@ -391,85 +233,92 @@ function buildFallbackWeather(){
   const now=new Date();
   return Array.from({length:5},(_,i)=>{
     const d=new Date(now);d.setDate(d.getDate()+i);
-    return{day:`${DAYS_ES[d.getDay()]} ${d.getDate()}`,hi:'--',cond:'sin datos',icon:'🌤',rain:0};
+    return{day:DAYS_ES[d.getDay()]+' '+d.getDate(),hi:20,cond:'despejado',icon:'☀',rain:0};
   });
 }
 
 async function fetchWeather(){
-  // Valencia coords
   const lat=39.47,lon=-0.376;
   try{
     const url=`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=temperature_2m_max,precipitation_probability_max,weather_code&timezone=Europe/Madrid&forecast_days=5`;
     const res=await fetch(url);
-    if(!res.ok) throw new Error('API error');
+    if(!res.ok)throw new Error();
     const data=await res.json();
     const daily=data.daily;
-    WEATHER=daily.time.map((t,i)=>{
+    const result=daily.time.map((t,i)=>{
       const d=new Date(t+'T12:00:00');
       const code=daily.weather_code[i];
-      let icon='☀',cond='soleado';
+      let icon='☀',cond='despejado';
       if(code<=1){icon='☀';cond='despejado'}
-      else if(code<=3){icon='⛅';cond='nublado parcial'}
+      else if(code<=3){icon='⛅';cond='nublado'}
       else if(code<=48){icon='☁';cond='nublado'}
       else if(code<=67){icon='🌧';cond='lluvia'}
-      else if(code<=77){icon='🌨';cond='nieve'}
       else if(code<=82){icon='🌧';cond='chubascos'}
       else{icon='⛈';cond='tormenta'}
-      return{
-        day:`${DAYS_ES[d.getDay()]} ${d.getDate()}`,
-        hi:Math.round(daily.temperature_2m_max[i]),
-        cond,icon,
-        rain:daily.precipitation_probability_max[i]||0
-      };
+      return{day:DAYS_ES[d.getDay()]+' '+d.getDate(),hi:Math.round(daily.temperature_2m_max[i]),cond,icon,rain:daily.precipitation_probability_max[i]||0};
     });
-    // Cache with version key to invalidate old format
-    try{localStorage.setItem('drape_weather',JSON.stringify({ts:Date.now(),v:2,data:WEATHER}))}catch(e){}
+    try{localStorage.setItem('drape_wx',JSON.stringify({ts:Date.now(),data:result}))}catch(e){}
+    return result;
   }catch(e){
-    // Try cache
     try{
-      const cached=JSON.parse(localStorage.getItem('drape_weather')||'null');
-      if(cached&&cached.v===2&&Date.now()-cached.ts<6*3600000){WEATHER=cached.data;return}
+      const cached=JSON.parse(localStorage.getItem('drape_wx')||'null');
+      if(cached&&Date.now()-cached.ts<6*3600000)return cached.data;
     }catch(e2){}
-    WEATHER=buildFallbackWeather();
+    return null;
   }
 }
 
-async function initApp(){
-  // Mostrar app inmediatamente con fallback
-  WEATHER=buildFallbackWeather();
-  rAll();
-  // Intentar cargar tiempo real y actualizar
-  await fetchWeather();
-  rDayScroll();
-  rWeather();
-  rFrags();
-}
+// ── DATA ──────────────────────────────────────────────────────────────────────
 const DEF={
-  blazers:[{id:"b1",label:"Blazer navy Emblems",color:"navy"},{id:"b2",label:"Blazer camel Emblems",color:"camel"},{id:"b3",label:"Chaqueta vaquera",color:"azul denim"}],
+  blazers:[
+    {id:"b1",label:"Blazer navy Emblems",color:"navy"},
+    {id:"b2",label:"Blazer camel Emblems",color:"camel"},
+    {id:"b3",label:"Chaqueta vaquera",color:"azul denim"}
+  ],
   tops_oficina:[
-    {id:"t1",label:"Camisa blanca Scalpers",color:"blanco"},{id:"t2",label:"Camisa rayas grises",color:"gris"},
-    {id:"t3",label:"Camisa verde oscuro Scalpers",color:"verde oscuro"},{id:"t4",label:"Camisa blanca puntos Boston",color:"blanco"},
-    {id:"t5",label:"Camisa coral",color:"coral"},{id:"t6",label:"Camisa azul mc Zara",color:"azul claro"},
-    {id:"t7",label:"Camisa verde oscuro Zara",color:"verde oscuro"},{id:"t8",label:"Camisa puntos blancos/azules",color:"azul"},
-    {id:"t9",label:"Camisa rayas marinero",color:"blanco/azul"},{id:"t10",label:"Camisa lino camel",color:"camel",linen:true},
-    {id:"t11",label:"Camisa lino verde",color:"verde",linen:true},{id:"t12",label:"Camisa verde muy claro",color:"verde claro"},
-    {id:"t13",label:"Camisa azul",color:"azul"},{id:"t14",label:"Camisa camel Pedro del Hierro",color:"camel"},
-    {id:"t15",label:"Camisa con bolsillo",color:"varios"},{id:"t16",label:"Jersey gris piedra",color:"gris"},
-    {id:"t17",label:"Jersey azul claro",color:"azul claro"},{id:"t18",label:"Jersey blanco",color:"blanco"},
-    {id:"t19",label:"Jersey verde V-neck",color:"verde claro"},{id:"t20",label:"Jersey marrón cashmere",color:"marrón"},
-    {id:"t21",label:"Polo navy Tommy HF piqué",color:"navy"},{id:"t22",label:"Camiseta flamé azul claro",color:"azul claro"},
+    {id:"t1",label:"Camisa blanca Scalpers",color:"blanco"},
+    {id:"t2",label:"Camisa rayas grises",color:"gris"},
+    {id:"t3",label:"Camisa verde oscuro Scalpers",color:"verde oscuro"},
+    {id:"t4",label:"Camisa blanca puntos Boston",color:"blanco"},
+    {id:"t5",label:"Camisa coral",color:"coral"},
+    {id:"t6",label:"Camisa azul mc Zara",color:"azul claro"},
+    {id:"t7",label:"Camisa verde oscuro Zara",color:"verde oscuro"},
+    {id:"t8",label:"Camisa puntos blancos/azules",color:"azul"},
+    {id:"t9",label:"Camisa rayas marinero",color:"blanco"},
+    {id:"t10",label:"Camisa lino camel",color:"camel",linen:true},
+    {id:"t11",label:"Camisa lino verde",color:"verde",linen:true},
+    {id:"t12",label:"Camisa verde muy claro",color:"verde claro"},
+    {id:"t13",label:"Camisa azul",color:"azul"},
+    {id:"t14",label:"Camisa camel Pedro del Hierro",color:"camel"},
+    {id:"t15",label:"Camisa con bolsillo",color:"varios"},
+    {id:"t16",label:"Jersey gris piedra",color:"gris"},
+    {id:"t17",label:"Jersey azul claro",color:"azul claro"},
+    {id:"t18",label:"Jersey blanco",color:"blanco"},
+    {id:"t19",label:"Jersey verde V-neck",color:"verde claro"},
+    {id:"t20",label:"Jersey marrón cashmere",color:"marrón"},
+    {id:"t21",label:"Polo navy Tommy HF piqué",color:"navy"},
+    {id:"t22",label:"Camiseta flamé azul claro",color:"azul claro"},
     {id:"t23",label:"Camiseta flamé gris oscuro",color:"gris oscuro"},
-    {id:"t24",label:"Polo crudo Zara RF",color:"crudo"},{id:"t25",label:"Polo verde Zara RF",color:"verde"}
+    {id:"t24",label:"Polo crudo Zara RF",color:"crudo"},
+    {id:"t25",label:"Polo verde Zara RF",color:"verde"}
   ],
   tops_casual:[
-    {id:"ct1",label:"Camisa palmeras verdes mc",color:"verde"},{id:"ct2",label:"Camisa cactus negra mc",color:"negro"},
-    {id:"ct3",label:"Camiseta flamé azul claro",color:"azul claro"},{id:"ct4",label:"Camiseta flamé gris oscuro",color:"gris oscuro"},
-    {id:"ct5",label:"Camiseta punto azul marino",color:"azul marino"},{id:"ct6",label:"Camiseta blanca",color:"blanco"},
-    {id:"ct7",label:"Camiseta verde Tommy Jeans",color:"verde"},{id:"ct8",label:"Camiseta roja bordados",color:"rojo"},
-    {id:"ct9",label:"Camiseta verde claro Levis",color:"verde claro"},{id:"ct10",label:"Camiseta rosa Nike",color:"rosa"},
-    {id:"ct11",label:"Camiseta verde oscuro Adidas",color:"verde oscuro"},{id:"ct12",label:"Camiseta Dragon Ball",color:"varios"},
-    {id:"ct13",label:"Camiseta coral",color:"coral"},{id:"ct14",label:"Polo navy Tommy HF piqué",color:"navy"},
-    {id:"ct15",label:"Polo crudo Zara RF",color:"crudo"},{id:"ct16",label:"Polo verde Zara RF",color:"verde"}
+    {id:"ct1",label:"Camisa palmeras verdes mc",color:"verde"},
+    {id:"ct2",label:"Camisa cactus negra mc",color:"negro"},
+    {id:"ct3",label:"Camiseta flamé azul claro",color:"azul claro"},
+    {id:"ct4",label:"Camiseta flamé gris oscuro",color:"gris oscuro"},
+    {id:"ct5",label:"Camiseta punto azul marino",color:"azul marino"},
+    {id:"ct6",label:"Camiseta blanca",color:"blanco"},
+    {id:"ct7",label:"Camiseta verde Tommy Jeans",color:"verde"},
+    {id:"ct8",label:"Camiseta roja bordados",color:"rojo"},
+    {id:"ct9",label:"Camiseta verde claro Levis",color:"verde claro"},
+    {id:"ct10",label:"Camiseta rosa Nike",color:"rosa"},
+    {id:"ct11",label:"Camiseta verde oscuro Adidas",color:"verde oscuro"},
+    {id:"ct12",label:"Camiseta Dragon Ball",color:"varios"},
+    {id:"ct13",label:"Camiseta coral",color:"coral"},
+    {id:"ct14",label:"Polo navy Tommy HF piqué",color:"navy"},
+    {id:"ct15",label:"Polo crudo Zara RF",color:"crudo"},
+    {id:"ct16",label:"Polo verde Zara RF",color:"verde"}
   ],
   pants_oficina:[
     {id:"p1",label:"Pantalón marrón claro",color:"marrón claro",type:"largo"},
@@ -499,69 +348,32 @@ const DEF={
     {id:"cs2",label:"Loafers marrones",color:"marrón",type:"zapato"}
   ]
 };
-// Tipos: oficina, casual, calor-dia, calor-noche, frio-dia, frio-noche
-// Una fragancia puede tener varios tipos
-const DEF_FRAGS=[
-  // OFICINA
-  {id:"f1", label:"Aqua di Gio Parfum",                    type:["oficina","calor-noche"]},
-  {id:"f2", label:"Jean Lowe Immortel",                    type:["oficina","calor-dia"]},
-  {id:"f3", label:"Energetically New York Elixir (Zara)",  type:["oficina","frio-dia"]},
-  {id:"f4", label:"Club de Nuit Man Intense",              type:["oficina","calor-dia"]},
-  {id:"f5", label:"Club de Nuit Urban Man Elixir",         type:["oficina","calor-noche"]},
-  {id:"f6", label:"Sunrise of the Red Sand Dunes (Zara)",  type:["oficina","calor-dia"]},
-  {id:"f7", label:"Le Sel D'issey",                        type:["oficina","calor-dia"]},
-  // CASUAL
-  {id:"f8", label:"Sceptre Malachite",                     type:["casual","calor-dia"]},
-  {id:"f9", label:"Liquid Brun",                           type:["casual","frio-noche"]},
-  {id:"f10",label:"Neroli Riviera",                        type:["casual","calor-dia"]},
-  {id:"f11",label:"Lattafa Khamrah",                       type:["casual","frio-noche"]},
-  {id:"f12",label:"Lattafa Asad",                          type:["casual","frio-dia","frio-noche"]},
-  {id:"f13",label:"Lattafa Asad Bourbon",                  type:["casual","frio-noche"]},
-  {id:"f14",label:"Pure XS",                               type:["casual","frio-noche"]},
-  {id:"f15",label:"Jean Paul Gaultier Le Male Elixir",     type:["casual","frio-noche"]},
-  {id:"f16",label:"Shamanilla (Zara)",                     type:["casual","calor-dia"]},
-  {id:"f17",label:"Vibrant Leather Explosion (Zara)",      type:["casual","frio-dia"]},
-  {id:"f18",label:"For Him Black Edition Intense (Zara)",  type:["casual","frio-noche"]},
-  {id:"f19",label:"Vibrant Leather Summer Breeze (Zara)",  type:["casual","calor-dia"]},
-  {id:"f20",label:"Beach Party (Armaf)",                   type:["casual","calor-dia"]},
-  {id:"f21",label:"Blue Temptation (Zara)",                type:["casual","calor-dia"]},
-  {id:"f22",label:"Atlantis Extrait",                      type:["casual","calor-noche"]},
-];
-const pick=a=>a[Math.floor(Math.random()*a.length)];
 
 function loadS(){
   try{
-    // drape_v3 forces fresh fragancias with new type format
     const s=JSON.parse(localStorage.getItem('drape_v3')||'null');
-    if(s) return s;
-    // Migrate wardrobe data from v2 if exists, but always use fresh fragancias
+    if(s)return s;
     const old=JSON.parse(localStorage.getItem('drape_v2')||'null');
-    if(old){
-      old.w.fragancias=JSON.parse(JSON.stringify(DEF_FRAGS));
-      return old;
-    }
+    if(old)return{w:old.w,h:old.h||[]};
   }catch(e){}
-  const def=JSON.parse(JSON.stringify(DEF));
-  def.fragancias=JSON.parse(JSON.stringify(DEF_FRAGS));
-  return{w:def,h:[]};
+  return{w:JSON.parse(JSON.stringify(DEF)),h:[]};
 }
 function saveS(){try{localStorage.setItem('drape_v3',JSON.stringify(S))}catch(e){}}
-let S=loadS();
-let day=0,ctx='oficina',momento='dia',BLZ=null,TOP=null,PNT=null,SHO=null,FRAG=null,delMode=false,curTab='look',showAllTops=false;
 
-const W=()=>WEATHER[day]||{day:'--',hi:'--',cond:'',icon:'🌤',rain:0};
+let S=loadS();
+let day=0,ctx='oficina',BLZ=null,TOP=null,PNT=null,SHO=null,delMode=false,curTab='look',showAllTops=false;
+
+const W=()=>WEATHER[day]||{day:'--',hi:20,cond:'',icon:'🌤',rain:0};
 const TT=()=>S.w['tops_'+ctx]||[];
 const PP=()=>S.w['pants_'+ctx]||[];
 const SS=()=>S.w['shoes_'+ctx]||[];
 const BL=()=>S.w.blazers||[];
 
-// === COLOR-BASED MATCHING (works with any garment, new or original) ===
-
-// Maps a color string to a normalized group for matching
+// ── COLOR MATCHING ────────────────────────────────────────────────────────────
 function colorGroup(c){
   if(!c)return 'otros';
   c=c.toLowerCase();
-  if(c.includes('blanc'))return 'blanco';
+  if(c.includes('blanc')||c.includes('crudo'))return 'blanco';
   if(c.includes('negro'))return 'negro';
   if(c.includes('gris'))return 'gris';
   if(c==='navy'||c.includes('azul marino'))return 'navy';
@@ -574,82 +386,66 @@ function colorGroup(c){
   if(c.includes('marrón claro'))return 'marrón claro';
   if(c.includes('marrón'))return 'marrón';
   if(c.includes('coral')||c.includes('rosa')||c.includes('rojo'))return 'cálido';
-  if(c.includes('beige')||c.includes('crema')||c.includes('crudo'))return 'neutro claro';
+  if(c.includes('beige')||c.includes('crema'))return 'neutro claro';
   return 'otros';
 }
 
-// Pant color priority by top color group (ordered best→good)
 const PANT_RULES={
-  'blanco':   ['gris','denim','negro','marrón claro','camel'],
-  'negro':    ['gris','denim','negro','marrón claro'],
-  'gris':     ['negro','marrón claro','denim','gris','camel'],
-  'navy':     ['gris','negro','marrón claro','denim','camel'],
-  'azul':     ['gris','marrón claro','negro','denim','camel'],
-  'azul oscuro':['gris','marrón claro','negro','camel'],
-  'verde':    ['marrón claro','negro','gris','denim'],
+  'blanco':      ['gris','denim','negro','marrón claro','camel'],
+  'negro':       ['gris','denim','negro','marrón claro'],
+  'gris':        ['negro','marrón claro','denim','gris','camel'],
+  'navy':        ['gris','negro','marrón claro','denim','camel'],
+  'azul':        ['gris','marrón claro','negro','denim','camel'],
+  'azul oscuro': ['gris','marrón claro','negro','camel'],
+  'verde':       ['marrón claro','negro','gris','denim'],
   'verde oscuro':['marrón claro','negro','gris','denim','camel'],
-  'camel':    ['gris','negro','marrón claro','denim'],
+  'camel':       ['gris','negro','marrón claro','denim'],
   'marrón claro':['gris','negro','denim','navy'],
-  'marrón':   ['gris','negro','denim','camel'],
-  'cálido':   ['gris','negro','marrón claro','denim'],
-  'neutro claro':['gris','negro','denim','marrón claro'],
-  'denim':    ['negro','gris','camel','marrón claro'],
-  'otros':    ['gris','negro','denim','marrón claro','camel']
+  'marrón':      ['gris','negro','denim','camel'],
+  'cálido':      ['gris','negro','marrón claro','denim'],
+  'denim':       ['negro','gris','camel','marrón claro'],
+  'otros':       ['gris','negro','denim','marrón claro','camel']
 };
 
-// Shoe color priority by pant color group
 const SHOE_RULES={
-  'negro':    ['azul oscuro','negro','marrón'],
-  'gris':     ['marrón','azul oscuro','camel'],
-  'camel':    ['marrón','camel','azul oscuro'],
+  'negro':       ['azul oscuro','negro','marrón'],
+  'gris':        ['marrón','azul oscuro','camel'],
+  'camel':       ['marrón','camel','azul oscuro'],
   'marrón claro':['marrón','camel','azul oscuro'],
-  'marrón':   ['marrón','camel','azul oscuro'],
-  'denim':    ['camel','marrón','azul oscuro'],
-  'blanco':   ['camel','marrón','azul oscuro'],
-  'otros':    ['marrón','azul oscuro','camel']
+  'marrón':      ['marrón','camel','azul oscuro'],
+  'denim':       ['camel','marrón','azul oscuro'],
+  'blanco':      ['camel','marrón','azul oscuro'],
+  'otros':       ['marrón','azul oscuro','camel']
 };
 
-// Blazer-top clash: same color family = bad combo
 const BLAZER_CLASH={
-  'navy':['navy','azul oscuro','azul marino'],
-  'camel':['camel','marrón claro','marrón'],
-  'negro':['negro'],
-  'gris':['gris'],
-  'denim':['denim','azul','azul oscuro']
+  'navy':  ['navy','azul oscuro','azul marino'],
+  'camel': ['camel','marrón claro','marrón'],
+  'negro': ['negro'],
+  'gris':  ['gris'],
+  'denim': ['denim','azul','azul oscuro']
 };
 
 function sugP(top){
   const p=PP(),tc=colorGroup(top.color),hi=W().hi;
-  if(ctx==='casual') return hi>=20?p.filter(x=>x.type==='corto').map(x=>x.id):p.map(x=>x.id);
+  if(ctx==='casual')return hi>=20?p.filter(x=>x.type==='corto').map(x=>x.id):p.map(x=>x.id);
   const priority=PANT_RULES[tc]||PANT_RULES['otros'];
-  // Score each pant: lower index in priority = better match
-  const scored=p.map(pant=>{
-    const pg=colorGroup(pant.color);
-    const idx=priority.indexOf(pg);
-    return{id:pant.id,score:idx>=0?idx:99};
-  });
-  scored.sort((a,b)=>a.score-b.score);
-  // Return IDs of pants that match (score < 99), or all if nothing matches
-  const matched=scored.filter(x=>x.score<99).map(x=>x.id);
+  const scored=p.map(pant=>({id:pant.id,score:priority.indexOf(colorGroup(pant.color))}));
+  scored.sort((a,b)=>(a.score<0?99:a.score)-(b.score<0?99:b.score));
+  const matched=scored.filter(x=>x.score>=0).map(x=>x.id);
   return matched.length?matched:p.map(x=>x.id);
 }
 
 function sugS(pant){
   const s=SS();
   if(ctx==='casual'){
-    // In casual, prefer zapatillas
     const zaps=s.filter(x=>x.type==='zapatilla').map(x=>x.id);
     return zaps.length?zaps:s.map(x=>x.id);
   }
-  const pc=colorGroup(pant.color);
-  const priority=SHOE_RULES[pc]||SHOE_RULES['otros'];
-  const scored=s.map(shoe=>{
-    const sg=colorGroup(shoe.color);
-    const idx=priority.indexOf(sg);
-    return{id:shoe.id,score:idx>=0?idx:99};
-  });
-  scored.sort((a,b)=>a.score-b.score);
-  const matched=scored.filter(x=>x.score<99).map(x=>x.id);
+  const priority=SHOE_RULES[colorGroup(pant.color)]||SHOE_RULES['otros'];
+  const scored=s.map(shoe=>({id:shoe.id,score:priority.indexOf(colorGroup(shoe.color))}));
+  scored.sort((a,b)=>(a.score<0?99:a.score)-(b.score<0?99:b.score));
+  const matched=scored.filter(x=>x.score>=0).map(x=>x.id);
   return matched.length?matched:s.map(x=>x.id);
 }
 
@@ -659,176 +455,61 @@ function blazerOk(b,t){
   const tg=colorGroup(t.color);
   const clashes=BLAZER_CLASH[bg];
   if(clashes)return !clashes.includes(tg);
-  // Generic: same group = clash
   return bg!==tg;
 }
-const FF=()=>S.w.fragancias||[];
 
-// Clasifica el tono del top: claro, neutro u oscuro/intenso
-function topTone(top){
-  if(!top) return 'neutro';
-  const g=colorGroup(top.color);
-  if(['blanco','neutro claro'].includes(g)) return 'claro';
-  if(['negro','verde oscuro','azul oscuro','navy','marrón'].includes(g)) return 'oscuro';
-  // Colores medios-claros
-  if(['gris','azul','verde','camel','marrón claro','denim'].includes(g)) return 'neutro';
-  // Colores cálidos/llamativos → tratar como claro (piden algo fresco que no compita)
-  if(g==='cálido') return 'claro';
-  return 'neutro';
-}
-
-// Puntuación de una fragancia según todos los factores activos
-function fragScore(frag){
-  if(!frag||!frag.type) return 0;
-  const hi=W()&&W().hi!=='--'?W().hi:20;
-  const calor=hi>=18;
-  const climaMomento=calor?(momento==='noche'?'calor-noche':'calor-dia'):(momento==='noche'?'frio-noche':'frio-dia');
-  const ctxTag=ctx==='oficina'?'oficina':'casual';
-  const tone=topTone(TOP);
-  let score=0;
-
-  // Contexto (oficina/casual): peso 3
-  if(frag.type.includes(ctxTag)) score+=3;
-  else score-=2; // penalizar contexto incorrecto
-
-  // Clima+momento: peso 3
-  if(frag.type.includes(climaMomento)) score+=3;
-  else score-=1;
-
-  // Tono del top: peso 4 (el más determinante para diferenciar)
-  if(tone==='claro'){
-    // Tops claros: prioridad máxima a frescas y limpias
-    if(frag.type.some(t=>['calor-dia'].includes(t))) score+=4;
-    else if(frag.type.some(t=>['oficina'].includes(t))) score+=2;
-    // Penalizar densas
-    if(frag.type.some(t=>['frio-noche'].includes(t))) score-=3;
-    if(frag.type.some(t=>['frio-dia'].includes(t))) score-=1;
-  } else if(tone==='oscuro'){
-    // Tops oscuros: prioridad a densas y especiadas
-    if(frag.type.some(t=>['frio-noche'].includes(t))) score+=4;
-    else if(frag.type.some(t=>['frio-dia'].includes(t))) score+=2;
-    // Penalizar las muy ligeras
-    if(frag.type.some(t=>['calor-dia'].includes(t))&&!frag.type.includes('oficina')) score-=2;
-  } else {
-    // Neutro: bonus moderado a las más versátiles (las que tienen más tipos)
-    score+=Math.min(frag.type.length, 3)*0.8;
-  }
-
-  return score;
-}
-
-function sugF(){
-  const all=FF();
-  if(!all.length) return [];
-  // Sin top seleccionado: no hay sugerencias, el usuario elige libremente
-  if(!TOP) return [];
-  const scored=all.map(f=>({id:f.id,score:fragScore(f)})).sort((a,b)=>b.score-a.score);
-  const maxScore=scored[0].score;
-  const threshold=Math.max(3, maxScore*0.80);
-  const suggested=scored.filter(x=>x.score>=threshold).map(x=>x.id);
-  return suggested.slice(0,4);
-}
-function selF(id){
-  FRAG=FRAG&&FRAG.id===id?null:FF().find(x=>x.id===id)||null;
-  rFrags();rOutfit();
-}
-function autoFrag(){
-  const sug=sugF();
-  const all=FF();
-  if(sug.length){
-    FRAG=all.find(f=>f.id===sug[Math.floor(Math.random()*sug.length)])||null;
-  }else if(all.length){
-    FRAG=all[Math.floor(Math.random()*all.length)];
-  }else{
-    FRAG=null;
-  }
-}
-function rFrags(){
-  const el=document.getElementById('frag-grid');
-  const lbl=document.getElementById('frag-section-label');
-  if(lbl&&WEATHER.length){
-    const hi=W()&&W().hi!=='--'?W().hi:20;
-    const calor=hi>=18;
-    const toneLabel=TOP?({'claro':'Top claro','oscuro':'Top oscuro','neutro':'Top neutro'}[topTone(TOP)]):'';
-    const parts=[`${calor?'Calor':'Frío'} · ${momento==='noche'?'🌙 Noche':'☀ Día'}`];
-    if(TOP&&toneLabel) parts.push(toneLabel);
-    lbl.textContent=`Fragancia — ${parts.join(' · ')}`;
-  }
-  const all=FF();
-  if(!all.length){el.innerHTML='<span class="hint-placeholder">Añade fragancias en el Armario</span>';return}
-  if(!TOP){el.innerHTML='<span class="hint-placeholder">Elige primero un top para ver sugerencias</span>';return}
-  const sug=sugF();
-  el.innerHTML=all.map(f=>{
-    const sel=FRAG&&FRAG.id===f.id;
-    const sg=sug.includes(f.id)&&!sel;
-    return`<button class="chip${sel?' active':sg?' suggest':''}" onclick="selF('${f.id}')">${f.label}${sg?' ✓':''}</button>`;
-  }).join('');
-}
 function autoSug(){
   if(!TOP)return;
   if(TOP.linen&&W().hi<16){TOP=null;return}
   const sP=sugP(TOP);
   PNT=PP().find(p=>p.id===sP[0])||null;
   if(PNT){SHO=SS().find(s=>s.id===sugS(PNT)[0])||null}
-  if(!FRAG)autoFrag();
 }
 
+// ── RENDER ────────────────────────────────────────────────────────────────────
 function rDayScroll(){
-  document.getElementById('day-scroll').innerHTML=WEATHER.map((d,i)=>`<button class="day-pill${i===day?' active':''}" onclick="selDay(${i})">${d.day}</button>`).join('');
+  document.getElementById('day-scroll').innerHTML=
+    WEATHER.map((d,i)=>`<button class="day-pill${i===day?' active':''}" onclick="selDay(${i})">${d.day}</button>`).join('');
 }
+
 function rWeather(){
   const d=W();
   document.getElementById('w-chip').textContent=d.icon+' '+d.hi+'°C';
 }
+
 function rBlazer(){
-  const bl=BL();
-  document.getElementById('blazer-grid').innerHTML=bl.map(b=>{
+  document.getElementById('blazer-grid').innerHTML=BL().map(b=>{
     const sel=BLZ&&BLZ.id===b.id;
     const ok=blazerOk(b,TOP);
     return`<button class="chip${sel?' active':''}" style="${!ok&&!sel?'opacity:.35':''}" onclick="selB('${b.id}')">${b.label}${!ok&&!sel?' ⚠':''}</button>`;
   }).join('');
 }
+
 function rTops(){
   const tt=TT(),hi=W().hi;
   const prev=new Set(S.h.slice(-3).map(x=>x.top));
-  const MAX_VISIBLE=6;
-  
-  // Sort: non-disabled non-recent first, then recent, then disabled
+  const MAX=6;
   const sorted=[...tt].sort((a,b)=>{
-    const aDis=a.linen&&hi<16;const bDis=b.linen&&hi<16;
+    const aDis=a.linen&&hi<16, bDis=b.linen&&hi<16;
     if(aDis!==bDis)return aDis?1:-1;
-    const aRep=prev.has(a.id);const bRep=prev.has(b.id);
+    const aRep=prev.has(a.id), bRep=prev.has(b.id);
     if(aRep!==bRep)return aRep?1:-1;
     return 0;
   });
-  
-  // If selected top exists, always include it
-  const selIdx=TOP?sorted.findIndex(t=>t.id===TOP.id):-1;
-  
-  const visible=showAllTops?sorted:sorted.slice(0,MAX_VISIBLE);
-  // Make sure selected item is always visible
-  if(TOP&&!showAllTops&&!visible.find(t=>t.id===TOP.id)){
-    visible.pop();
-    visible.push(sorted[selIdx]);
-  }
-  
-  const remaining=sorted.length-MAX_VISIBLE;
-  
+  const visible=showAllTops?sorted:sorted.slice(0,MAX);
+  if(TOP&&!showAllTops&&!visible.find(t=>t.id===TOP.id)){visible.pop();visible.push(sorted.find(t=>t.id===TOP.id))}
+  const remaining=sorted.length-MAX;
   let html=visible.map(t=>{
     const sel=TOP&&TOP.id===t.id;
     const dis=t.linen&&hi<16;
     const rep=prev.has(t.id)&&!sel;
     return`<button class="chip${sel?' active':dis?' muted':rep?' warn':''}" onclick="${dis?'':'selT(\''+t.id+'\')'}">${t.label}${dis?' (frío)':rep?' ↻':''}</button>`;
   }).join('');
-  
-  if(!showAllTops&&remaining>0){
-    html+=`<button class="chip chip-more" onclick="showAllTops=true;rTops()">+${remaining} más</button>`;
-  } else if(showAllTops&&sorted.length>MAX_VISIBLE){
-    html+=`<button class="chip chip-more" onclick="showAllTops=false;rTops()">Ver menos</button>`;
-  }
-  
+  if(!showAllTops&&remaining>0)html+=`<button class="chip chip-more" onclick="showAllTops=true;rTops()">+${remaining} más</button>`;
+  else if(showAllTops&&sorted.length>MAX)html+=`<button class="chip chip-more" onclick="showAllTops=false;rTops()">Ver menos</button>`;
   document.getElementById('tops-grid').innerHTML=html;
 }
+
 function rPants(){
   const pp=PP();
   const el=document.getElementById('pants-grid');
@@ -841,6 +522,7 @@ function rPants(){
     return`<button class="chip${sel?' active':sg?' suggest':dis?' muted':''}" onclick="${dis?'':'selP(\''+p.id+'\')'}">${p.label}${sg?' ✓':''}</button>`;
   }).join('');
 }
+
 function rShoes(){
   const ss=SS();
   const el=document.getElementById('shoes-grid');
@@ -852,6 +534,7 @@ function rShoes(){
     return`<button class="chip${sel?' active':sg?' suggest':''}" onclick="selS('${s.id}')">${s.label}${sg?' ✓':''}</button>`;
   }).join('');
 }
+
 function rOutfit(){
   const wrap=document.getElementById('outfit-wrap');
   const cta=document.getElementById('save-cta');
@@ -868,7 +551,6 @@ function rOutfit(){
     <div class="outfit-item"><span class="outfit-cat">Top</span><span class="outfit-val">${TOP.label}</span><div class="outfit-dot"></div></div>
     <div class="outfit-item"><span class="outfit-cat">Pantalón</span><span class="outfit-val">${PNT.label}</span><div class="outfit-dot"></div></div>
     <div class="outfit-item"><span class="outfit-cat">Calzado</span><span class="outfit-val">${SHO.label}</span><div class="outfit-dot"></div></div>
-    ${FRAG?`<div class="outfit-item"><span class="outfit-cat">Fragancia</span><span class="outfit-val">${FRAG.label}</span><div class="outfit-dot"></div></div>`:''}
   </div>
   ${tips.map(t=>`<div class="tip-row ${t.w?'tip-warn':'tip-info'}">${t.t}</div>`).join('')}`;
   cta.style.display='flex';
@@ -884,8 +566,7 @@ function rHistory(){
     <div class="hist-look">
       ${item.blazerLabel?`<span style="font-size:11px;color:var(--ink3);font-weight:600">${item.blazerLabel} · </span>`:''}
       ${item.topLabel}<br>
-      <span class="hist-sub">${item.pantLabel} · ${item.shoeLabel}</span>
-      ${item.fragLabel?`<br><span class="hist-sub" style="font-style:italic">🧴 ${item.fragLabel}</span>`:''}<br>
+      <span class="hist-sub">${item.pantLabel} · ${item.shoeLabel}</span><br>
       <span class="hist-ctx">${item.ctx==='oficina'?'Oficina':'Casual'}</span>
     </div>
     <button onclick="delH(${h.length-1-i})" style="font-size:20px;color:var(--ink3);background:none;border:none;cursor:pointer;padding:0 0 0 8px;line-height:1;font-weight:300">×</button>
@@ -901,7 +582,6 @@ function rArmario(){
     {key:'pants_casual',label:'Pantalones — casual'},
     {key:'shoes_oficina',label:'Calzado — oficina'},
     {key:'shoes_casual',label:'Calzado — casual'},
-    {key:'fragancias',label:'Fragancias'},
   ];
   document.getElementById('arm-sections').innerHTML=`<div style="height:8px"></div>`+cats.map(c=>`
   <div class="arm-cat">
@@ -914,117 +594,50 @@ function rArmario(){
     </div>
     <div class="arm-grid${delMode?' del-mode-active':''}">
       ${(S.w[c.key]||[]).map(item=>`
-      <div class="arm-chip">
-        ${item.label}
-        <button class="arm-del" onclick="delItem('${c.key}','${item.id}')">×</button>
-      </div>`).join('')}
+      <div class="arm-chip">${item.label}<button class="arm-del" onclick="delItem('${c.key}','${item.id}')">×</button></div>`).join('')}
     </div>
   </div>`).join('');
 }
 
-function selDay(i){day=i;TOP=null;PNT=null;SHO=null;BLZ=null;FRAG=null;showAllTops=false;rAll()}
+// ── ACTIONS ───────────────────────────────────────────────────────────────────
+function selDay(i){day=i;TOP=null;PNT=null;SHO=null;BLZ=null;showAllTops=false;rAll()}
 function setCtx(c){
-  ctx=c;TOP=null;PNT=null;SHO=null;BLZ=null;FRAG=null;showAllTops=false;
+  ctx=c;TOP=null;PNT=null;SHO=null;BLZ=null;showAllTops=false;
   document.getElementById('ctx-of').className='ctx-btn'+(c==='oficina'?' active':'');
   document.getElementById('ctx-ca').className='ctx-btn'+(c==='casual'?' active':'');
-  document.getElementById('blazer-wrap').style.display='block';
   rAll();
 }
 function selB(id){BLZ=BLZ&&BLZ.id===id?null:BL().find(x=>x.id===id);rAll()}
 function selT(id){TOP=TT().find(x=>x.id===id);PNT=null;SHO=null;autoSug();rAll()}
 function selP(id){PNT=PP().find(x=>x.id===id);SHO=SS().find(s=>s.id===sugS(PNT)[0])||null;rAll()}
 function selS(id){SHO=SS().find(x=>x.id===id);rAll()}
-function setMomento(m){
-  momento=m;FRAG=null;
-  document.getElementById('ctx-day').className='ctx-btn'+(m==='dia'?' active':'');
-  document.getElementById('ctx-night').className='ctx-btn'+(m==='noche'?' active':'');
-  rFrags();rOutfit();
-}
-function resetOutfit(){TOP=null;PNT=null;SHO=null;BLZ=null;FRAG=null;rAll()}
-function debugFrags(){
-  const el=document.getElementById('debug-out');
-  el.style.display='block';
-  const frags=FF();
-  const hi=W()&&W().hi!=='--'?W().hi:20;
-  const calor=hi>=18;
-  const climaMomento=calor?(momento==='noche'?'calor-noche':'calor-dia'):(momento==='noche'?'frio-noche':'frio-dia');
-  const tone=TOP?topTone(TOP):'(sin top)';
-  let out=`TOP: ${TOP?TOP.label+' ('+TOP.color+')':'null'}\n`;
-  out+=`Tone: ${tone} | Ctx: ${ctx} | Clima: ${climaMomento}\n`;
-  out+=`LS v3: ${localStorage.getItem('drape_v3')?'OK':'MISSING'} | LS v2: ${localStorage.getItem('drape_v2')?'OK':'MISSING'}\n\n`;
-  out+=`Fragancias (${frags.length}):\n`;
-  frags.forEach(f=>{
-    const s=TOP?fragScore(f).toFixed(1):'?';
-    out+=`${f.label}: [${(f.type||[]).join(',')}] s=${s}\n`;
-  });
-  const sug=TOP?sugF():[];
-  out+=`\nSugeridas IDs: ${sug.join(', ')||'ninguna'}`;
-  el.textContent=out;
-}
-  const el=document.getElementById('debug-out');
-  el.style.display='block';
-  const frags=FF();
-  const hi=W()&&W().hi!=='--'?W().hi:20;
-  const calor=hi>=18;
-  const climaMomento=calor?(momento==='noche'?'calor-noche':'calor-dia'):(momento==='noche'?'frio-noche':'frio-dia');
-  const tone=TOP?topTone(TOP):'(sin top)';
-  const ctx_=ctx;
-  let out=`TOP: ${TOP?TOP.label+' ('+TOP.color+')':'null'}\n`;
-  out+=`Tone: ${tone} | Ctx: ${ctx_} | Clima: ${climaMomento}\n`;
-  out+=`LS key v3: ${localStorage.getItem('drape_v3')?'EXISTS':'MISSING'}\n`;
-  out+=`LS key v2: ${localStorage.getItem('drape_v2')?'EXISTS':'MISSING'}\n\n`;
-  out+=`Fragancias en memoria (${frags.length}):\n`;
-  frags.forEach(f=>{
-    const s=TOP?fragScore(f).toFixed(1):'?';
-    out+=`  ${f.label}: [${(f.type||[]).join(',')}] score=${s}\n`;
-  });
-  const sug=TOP?sugF():[];
-  out+=`\nSugeridas: ${sug.length>0?sug.join(', '):'ninguna'}`;
-  el.textContent=out;
-}
-function resetDebug(){document.getElementById('debug-out').style.display='none'}
+function resetOutfit(){TOP=null;PNT=null;SHO=null;BLZ=null;rAll()}
 
 function saveH(){
   if(!TOP||!PNT||!SHO)return;
-  S.h.push({day:W().day,blazer:BLZ?BLZ.id:null,blazerLabel:BLZ?BLZ.label:null,top:TOP.id,topLabel:TOP.label,pant:PNT.id,pantLabel:PNT.label,shoe:SHO.id,shoeLabel:SHO.label,frag:FRAG?FRAG.id:null,fragLabel:FRAG?FRAG.label:null,ctx});
+  S.h.push({day:W().day,blazer:BLZ?BLZ.id:null,blazerLabel:BLZ?BLZ.label:null,top:TOP.id,topLabel:TOP.label,pant:PNT.id,pantLabel:PNT.label,shoe:SHO.id,shoeLabel:SHO.label,ctx});
   saveS();document.getElementById('save-cta').style.display='none';rOutfit();
 }
 function delH(i){S.h.splice(i,1);saveS();rHistory()}
 function toggleDel(){delMode=!delMode;rArmario()}
-function delItem(cat,id){const a=S.w[cat];const i=a.findIndex(x=>x.id===id);if(i>=0){a.splice(i,1);saveS();rArmario();}}
+function delItem(cat,id){const a=S.w[cat];const i=a.findIndex(x=>x.id===id);if(i>=0){a.splice(i,1);saveS();rArmario()}}
 
 let mCat='tops_oficina';
-function updateModal(){
-  const cat=document.getElementById('m-cat').value;
-  const isFrag=cat==='fragancias';
-  document.getElementById('m-title').textContent=isFrag?'Añadir fragancia':'Añadir prenda';
-  document.getElementById('m-color-wrap').style.display=isFrag?'none':'block';
-  document.getElementById('m-frag-type').style.display=isFrag?'block':'none';
-  document.getElementById('m-label').placeholder=isFrag?'Nombre (ej: Bleu de Chanel EDP)':'Nombre (ej: Camisa azul Massimo Dutti)';
-}
 function openM(cat){
   mCat=cat;
   document.getElementById('m-cat').value=cat;
   document.getElementById('m-label').value='';
   document.getElementById('m-color').value='';
-  document.querySelectorAll('.frag-type-chk').forEach(c=>c.checked=false);
-  updateModal();
   document.getElementById('modal-wrap').classList.add('open');
 }
 function closeM(){document.getElementById('modal-wrap').classList.remove('open')}
 function saveItem(){
   const label=document.getElementById('m-label').value.trim();
+  const color=document.getElementById('m-color').value.trim()||'varios';
   const cat=document.getElementById('m-cat').value;
-  if(!label){alert(cat==='fragancias'?'Escribe el nombre de la fragancia':'Escribe el nombre de la prenda');return}
+  if(!label){alert('Escribe el nombre de la prenda');return}
   if(!S.w[cat])S.w[cat]=[];
-  if(cat==='fragancias'){
-    const types=[...document.querySelectorAll('.frag-type-chk:checked')].map(c=>c.value);
-    if(!types.length){alert('Selecciona al menos un tipo de fragancia');return}
-    S.w[cat].push({id:'frag_'+Date.now(),label,type:types});
-  }else{
-    const color=document.getElementById('m-color').value.trim()||'varios';
-    S.w[cat].push({id:cat+'_'+Date.now(),label,color});
-  }
+  S.w[cat].push({id:cat+'_'+Date.now(),label,color});
   saveS();closeM();rArmario();
 }
 
@@ -1041,15 +654,21 @@ function switchTab(t){
   if(t==='arm')rArmario();
 }
 
-function rAll(){rDayScroll();rWeather();rBlazer();rTops();rPants();rShoes();rFrags();rOutfit()}
+function rAll(){rDayScroll();rWeather();rBlazer();rTops();rPants();rShoes();rOutfit()}
 
-// Init
-initApp();
+// ── INIT ──────────────────────────────────────────────────────────────────────
+async function initApp(){
+  WEATHER=buildFallbackWeather();
+  rAll();
+  const wx=await fetchWeather();
+  if(wx&&wx.length){WEATHER=wx;rDayScroll();rWeather();}
+}
 
-// Register Service Worker for PWA
 if('serviceWorker' in navigator){
   navigator.serviceWorker.register('sw.js').catch(()=>{});
 }
+
+initApp();
 </script>
 </body>
 </html>
