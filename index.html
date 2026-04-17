@@ -435,9 +435,14 @@ async function fetchWeather(){
 }
 
 async function initApp(){
-  await fetchWeather();
-  if(!WEATHER.length)WEATHER=buildFallbackWeather();
+  // Mostrar app inmediatamente con fallback
+  WEATHER=buildFallbackWeather();
   rAll();
+  // Intentar cargar tiempo real y actualizar
+  await fetchWeather();
+  rDayScroll();
+  rWeather();
+  rFrags();
 }
 const DEF={
   blazers:[{id:"b1",label:"Blazer navy Emblems",color:"navy"},{id:"b2",label:"Blazer camel Emblems",color:"camel"},{id:"b3",label:"Chaqueta vaquera",color:"azul denim"}],
@@ -544,7 +549,7 @@ function saveS(){try{localStorage.setItem('drape_v3',JSON.stringify(S))}catch(e)
 let S=loadS();
 let day=0,ctx='oficina',momento='dia',BLZ=null,TOP=null,PNT=null,SHO=null,FRAG=null,delMode=false,curTab='look',showAllTops=false;
 
-const W=()=>WEATHER[day];
+const W=()=>WEATHER[day]||{day:'--',hi:'--',cond:'',icon:'🌤',rain:0};
 const TT=()=>S.w['tops_'+ctx]||[];
 const PP=()=>S.w['pants_'+ctx]||[];
 const SS=()=>S.w['shoes_'+ctx]||[];
