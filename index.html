@@ -660,7 +660,11 @@ function topTone(top){
   const g=colorGroup(top.color);
   if(['blanco','neutro claro'].includes(g)) return 'claro';
   if(['negro','verde oscuro','azul oscuro','navy','marrón'].includes(g)) return 'oscuro';
-  return 'neutro'; // gris, azul, verde, coral, camel, denim...
+  // Colores medios-claros
+  if(['gris','azul','verde','camel','marrón claro','denim'].includes(g)) return 'neutro';
+  // Colores cálidos/llamativos → tratar como claro (piden algo fresco que no compita)
+  if(g==='cálido') return 'claro';
+  return 'neutro';
 }
 
 // Puntuación de una fragancia según todos los factores activos
@@ -672,35 +676,47 @@ function fragScore(frag){
   const ctxTag=ctx==='oficina'?'oficina':'casual';
   const tone=topTone(TOP);
   let score=0;
-  // Contexto: peso alto
-  if(frag.type.includes(ctxTag)) score+=4;
-  // Clima+momento: peso alto
-  if(frag.type.includes(climaMomento)) score+=4;
-  // Tono del top: peso medio
+
+  // Contexto (oficina/casual): peso 3
+  if(frag.type.includes(ctxTag)) score+=3;
+  else score-=2; // penalizar contexto incorrecto
+
+  // Clima+momento: peso 3
+  if(frag.type.includes(climaMomento)) score+=3;
+  else score-=1;
+
+  // Tono del top: peso 4 (el más determinante para diferenciar)
   if(tone==='claro'){
-    // Tops claros → mejor con fragancias frescas y limpias (calor-dia, oficina)
-    if(frag.type.some(t=>['calor-dia','oficina'].includes(t))) score+=2;
-    // Penalizar fragancias muy densas en tops claros
-    if(frag.type.some(t=>['frio-noche'].includes(t))&&!frag.type.includes('casual')) score-=1;
+    // Tops claros: prioridad máxima a frescas y limpias
+    if(frag.type.some(t=>['calor-dia'].includes(t))) score+=4;
+    else if(frag.type.some(t=>['oficina'].includes(t))) score+=2;
+    // Penalizar densas
+    if(frag.type.some(t=>['frio-noche'].includes(t))) score-=3;
+    if(frag.type.some(t=>['frio-dia'].includes(t))) score-=1;
   } else if(tone==='oscuro'){
-    // Tops oscuros → aguantan más densidad y especias
-    if(frag.type.some(t=>['frio-noche','frio-dia'].includes(t))) score+=2;
-    if(frag.type.includes('casual')) score+=1;
+    // Tops oscuros: prioridad a densas y especiadas
+    if(frag.type.some(t=>['frio-noche'].includes(t))) score+=4;
+    else if(frag.type.some(t=>['frio-dia'].includes(t))) score+=2;
+    // Penalizar las muy ligeras
+    if(frag.type.some(t=>['calor-dia'].includes(t))&&!frag.type.includes('oficina')) score-=2;
   } else {
-    // Neutros → pequeño bonus a las que encajan en más contextos
-    score+=frag.type.length*0.3;
+    // Neutro: bonus moderado a las más versátiles (las que tienen más tipos)
+    score+=Math.min(frag.type.length, 3)*0.8;
   }
+
   return score;
 }
 
 function sugF(){
   const all=FF();
   if(!all.length) return [];
-  // Puntuar y ordenar
   const scored=all.map(f=>({id:f.id,score:fragScore(f)})).sort((a,b)=>b.score-a.score);
   const maxScore=scored[0].score;
-  // Sugeridas: las que tienen puntuación alta (al menos 70% del máximo y mínimo 4 puntos)
-  return scored.filter(x=>x.score>=Math.max(4, maxScore*0.7)).map(x=>x.id);
+  // Umbral más exigente: 80% del máximo, mínimo score de 3
+  const threshold=Math.max(3, maxScore*0.80);
+  const suggested=scored.filter(x=>x.score>=threshold).map(x=>x.id);
+  // Máximo 4 sugerencias para no mostrar demasiadas
+  return suggested.slice(0,4);
 }
 function selF(id){
   FRAG=FRAG&&FRAG.id===id?null:FF().find(x=>x.id===id)||null;
@@ -723,9 +739,9 @@ function rFrags(){
   if(lbl&&WEATHER.length){
     const hi=W()&&W().hi!=='--'?W().hi:20;
     const calor=hi>=18;
-    const toneLabel=TOP?({'claro':'Top claro','oscuro':'Top oscuro','neutro':''}[topTone(TOP)]):'';
+    const toneLabel=TOP?({'claro':'Top claro','oscuro':'Top oscuro','neutro':'Top neutro'}[topTone(TOP)]):'';
     const parts=[`${calor?'Calor':'Frío'} · ${momento==='noche'?'🌙 Noche':'☀ Día'}`];
-    if(toneLabel) parts.push(toneLabel);
+    if(TOP&&toneLabel) parts.push(toneLabel);
     lbl.textContent=`Fragancia — ${parts.join(' · ')}`;
   }
   const all=FF();
